@@ -11,6 +11,16 @@
 |
 */
 
+/*
 Route::get('/', function () {
     return view('welcome');
 });
+*/
+
+Route::get("/","HomeController@index");
+
+Route::get("/articles","ArticleController@index");
+Route::get('/articles/{post_name}', 'ArticleController@show');
+
+Route::get("/contact","ContactController@create");
+Route::post("/contact",['as'=>'contact.store','uses'=>'ContactController@store']);

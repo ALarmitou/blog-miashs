@@ -3,12 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Post;
+
 class HomeController extends Controller
 {
-    public function index(){
-        $posts = Post::orderBy('id', 'desc')->take(3)->get();;
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
-        return view("welcome",array("posts"=>$posts));
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index()
+    {
+        $posts = \App\Post::orderBy('id', 'desc')->take(3)->get();
+        return view('welcome',array("posts"=>$posts));
     }
 }

@@ -8,9 +8,10 @@
         <div class="callout">
             <ul class="menu simple">
                 <li><a href="#">Author: {{$post->author->name}}</a></li>
-                <li><a href="#">Comments: 3</a></li>
             </ul>
         </div>
     </div>
+    <comment-list post_id="{{$post->id}}"></comment-list>
+    <form-comment post_id="{{$post->id}}"></form-comment>
 
 @endsection

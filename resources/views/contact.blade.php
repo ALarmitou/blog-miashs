@@ -20,7 +20,7 @@
             {{ session('message')}}
         </div>
     @endif
-    
+
     <form action="{{route("contact.store")}}" method="post">
         @csrf
         <div class="form-group">

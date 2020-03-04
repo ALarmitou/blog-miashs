@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Comment;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\PostResource;
 use Illuminate\Http\Request;
 use App\Post;
 class PostController extends Controller
@@ -16,7 +17,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(PostResource::collection(Post::all()));
     }
 
     /**

@@ -28,4 +28,6 @@ Route::post("/contact",['as'=>'contact.store','uses'=>'ContactController@store']
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
-Route::resource('/admin/posts', 'Admin\PostController');
+
+Route::get('/admin', 'Admin\AdminController@index');
+Route::get('/admin/{type}', 'Admin\AdminController@list');

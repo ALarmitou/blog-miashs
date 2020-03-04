@@ -22,5 +22,14 @@ Route::apiResources([
     'posts'=>'Api\PostController'
 ]);
 
+Route::resource('posts', 'Api\PostController')->names([
+    'index' => 'api.posts.index'
+]);
+
+
+Route::resource('comments', 'Api\CommentController')->names([
+    'index' => 'api.comments.index'
+]);
+
 Route::get("/posts/{id}/comments",['as'=>'posts.comments.show','uses'=>'Api\PostController@showComments']);
 

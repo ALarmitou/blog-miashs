@@ -30,4 +30,4 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 
 Route::get('/admin', 'Admin\AdminController@index');
-Route::get('/admin/{type}', 'Admin\AdminController@list');
+Route::get('/admin/posts', 'Admin\PostController@index');

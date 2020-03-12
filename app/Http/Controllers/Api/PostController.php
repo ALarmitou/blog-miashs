@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Comment;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostRequest;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PostResource;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return response()->json(PostResource::collection(Post::all()));
+        return PostResource::collection(Post::paginate(5));
     }
 
     /**
@@ -26,9 +27,16 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        //
+        $request->validated();
+        $post = $request->all();
+        $post["post_date"] = now();
+        $post['user_id'] = 1;
+        $post['post_status'] = 'publish';
+        $post['post_type'] = 'article';
+        Post::create($post);
+        return "ok";
     }
 
     /**
@@ -39,7 +47,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json(new PostResource(Post::find($id)));
     }
 
     /**
@@ -49,9 +57,18 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
-        //
+        $request->validated();
+        $post = Post::find($id);
+        $post->post_title = $request->get("post_title");
+        $post->post_name = $request->get("post_name");
+        $post->post_content = $request->get('post_content');
+        $post->user_id = 2;
+        $post->post_category = $request->get('post_category');
+        $post->save();
+        return "ok";
+
     }
 
     /**
@@ -62,7 +79,9 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        $post->delete();
+        return "ok";
     }
 
     /**

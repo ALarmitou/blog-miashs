@@ -19,10 +19,4 @@ class AdminController extends Controller
         return view("admin/admin", array("models"=>$models));
     }
 
-    public function list($type){
-        if(!Schema::hasTable($type)){
-         abort(404);
-        }
-        return view("admin/list",array("type"=>$type));
-    }
 }

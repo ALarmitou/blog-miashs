@@ -18,6 +18,38 @@
             <li><a href="/contact">Contact</a></li>
         </ul>
     </div>
+    <div class="top-bar-right">
+        <ul class="menu dropdown" data-dropdown-menu>
+            <!-- Authentication Links -->
+            @guest
+                <li>
+                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                </li>
+                @if (Route::has('register'))
+                    <li>
+                        <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                    </li>
+                @endif
+            @else
+                <li>
+                    <a>{{ Auth::user()->name }}</a>
+                    <ul class="menu vertical">
+                        <li>
+                            <a href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            @endguest
+        </ul>
+    </div>
 </div>
 
 <div class="callout large primary">

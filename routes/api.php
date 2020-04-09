@@ -17,19 +17,27 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get("/posts",['as'=>'api.posts.index','uses'=>'Api\PostController@index']);
+
+Route::post("/posts",['as'=>'posts.store','uses'=>'Api\PostController@store'])
+    ->middleware(['auth:api', 'scopes:manage-posts']);
+
+Route::get("/posts/{id}",['as'=>'posts.show','uses'=>'Api\PostController@show']);
+
+Route::put("/posts/{id}",['as'=>'posts.update','uses'=>'Api\PostController@update'])
+    ->middleware(['auth:api', 'scopes:manage-posts']);
+
+Route::delete("/posts/{id}",['as'=>'posts.delete','uses'=>'Api\PostController@delete'])
+    ->middleware(['auth:api', 'scopes:manage-posts']);
+
+Route::get("/posts/{id}/comments",['as'=>'posts.comments.show','uses'=>'Api\PostController@showComments']);
+
 Route::apiResources([
-    'comments'=>'Api\CommentController',
-    'posts'=>'Api\PostController'
+    'comments'=>'Api\CommentController'
 ]);
-
-Route::resource('posts', 'Api\PostController')->names([
-    'index' => 'api.posts.index'
-]);
-
 
 Route::resource('comments', 'Api\CommentController')->names([
     'index' => 'api.comments.index'
 ]);
 
-Route::get("/posts/{id}/comments",['as'=>'posts.comments.show','uses'=>'Api\PostController@showComments']);
 

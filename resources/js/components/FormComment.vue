@@ -47,7 +47,7 @@
                 axios.post('/api/comments',this.getCommentToSend())
                     .then(data=>{
                         this.success = true;
-                        window.events.$emit("updateComments","test");
+                        window.session.$emit("updateComments","do-it");
                     })
                     .catch(error => {
                         if (error.response.status == 422){

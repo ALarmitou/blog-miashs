@@ -27,7 +27,7 @@
         mounted() {
             this.getComments();
             let self = this;
-            window.events.$on('updateComments', function() {
+            window.session.$on('updateComments', function() {
                 self.getComments();
             })
         }

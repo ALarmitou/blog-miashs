@@ -52,7 +52,7 @@
         mounted() {
             this.getData();
             let self = this;
-            window.events.$on('updateAdminPosts', function() {
+            window.session.$on('updateAdminPosts', function() {
                 self.getData();
             })
         }

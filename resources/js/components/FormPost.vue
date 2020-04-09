@@ -69,14 +69,18 @@
                 this.form.open();
             },
             addPost(){
-                axios.post('/api/posts',this.postToAdd).then(data=>{
+                axios.post('/api/posts', this.postToAdd,{headers: {
+                    "Authorization": this.$session.get('token')
+                }}).then(data=>{
                     console.log(data);
                 }).catch(error=>{
                     console.log(error);
                 });
             },
             updatePost(){
-                axios.put('/api/posts/'+this.postToAdd.id,this.postToAdd).then(data=>{
+                axios.put('/api/posts/'+this.postToAdd.id, this.postToAdd,{headers: {
+                        "Authorization": this.$session.get('token')
+                    }}).then(data=>{
                     console.log(data);
 
                 }).catch(error=>{

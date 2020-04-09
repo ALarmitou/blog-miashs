@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -37,4 +39,24 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    protected function authenticated(Request $request, User $user)
+    {
+        if ($request->ajax()){
+            $testToken = $user->createToken('t')->accessToken;
+            return response()->json([
+                'auth' => auth()->check(),
+                'user' => $user,
+                'token'=> $testToken,
+                'intended' => $this->redirectPath(),
+            ]);
+
+        }
+    }
+
+    public function loggedOut(Request $request)
+    {
+        return response()->json("ok");
+    }
+
 }

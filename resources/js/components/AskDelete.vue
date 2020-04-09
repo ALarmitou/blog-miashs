@@ -34,7 +34,7 @@
             },
             deleteItem(){
                 axios.delete('/api/'+this.type+'s/'+this.item_id).then(data=>{
-                    window.events.$emit(this.tellAdmin,"test");
+                    window.session.$emit(this.tellAdmin,"do-it");
                 });
             }
         },

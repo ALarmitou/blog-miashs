@@ -6,7 +6,7 @@
         </td>
         <td align="center">
             <form-post v-bind:post="this.post"></form-post>
-            <ask-delete type="post" v-bind:item_id="post.id" tell-admin="updateAdminPosts"></ask-delete>
+            <ask-delete type="post" v-bind:item_id="post.id" tell-admin="updateAdmin"></ask-delete>
         </td>
     </tr>
 </template>

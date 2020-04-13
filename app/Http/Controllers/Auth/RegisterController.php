@@ -72,15 +72,12 @@ class RegisterController extends Controller
         ]);
     }
 
-    protected function registered(Request $request, $user)
-    {
+    protected function registered(Request $request, $user){
         if ($request->ajax()){
             $testToken = $user->createToken('t')->accessToken;
             return response()->json([
-                'auth' => auth()->check(),
                 'user' => $user,
                 'token'=> $testToken,
-                'intended' => $this->redirectPath(),
             ]);
 
         }

@@ -46,6 +46,7 @@
           logout:function(){
               axios.post("/logout").then(data=>{
                   this.$session.destroy();
+                  window.location.reload();
               }).catch(error=>{
                   console.log("error")
               })
@@ -53,7 +54,8 @@
         },
         mounted(){
             $(this.$el).foundation();
-            this.clean_user = JSON.parse(this.user);
+            if(this.user)
+                this.clean_user = JSON.parse(this.user);
         }
     }
 </script>

@@ -35,7 +35,9 @@
         },
         methods:{
             getData:function(url=this.api_to_fetch){
-                axios.get(url).then(data=>{
+                axios.get(url,{headers: {
+                        "Authorization": this.$session.get('token')
+                    }}).then(data=>{
                     this.links = data.data.links;
                     if(this.headers.length === 0) {
                         this.getHeaders(data.data.data[0]);
@@ -52,7 +54,7 @@
         mounted() {
             this.getData();
             let self = this;
-            window.session.$on('updateAdminPosts', function() {
+            window.session.$on('updateAdmin', function() {
                 self.getData();
             })
         }

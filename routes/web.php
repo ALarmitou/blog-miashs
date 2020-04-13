@@ -26,6 +26,9 @@ Route::get("/contact","ContactController@create");
 Route::post("/contact",['as'=>'contact.store','uses'=>'ContactController@store']);
 
 Auth::routes();
-
-Route::get('/admin', 'Admin\AdminController@index');
-Route::get('/admin/posts', 'Admin\PostController@index');
+Route::group(['middleware' => 'role:admin'], function() {
+    Route::get('/admin', 'Admin\AdminController@index');
+    Route::get('/admin/posts', 'Admin\PostController@index');
+    Route::get('/admin/roles', 'Admin\RoleController@index');
+    Route::get('/admin/users', 'Admin\UserController@index');
+});

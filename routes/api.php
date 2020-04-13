@@ -36,6 +36,40 @@ Route::apiResources([
     'comments'=>'Api\CommentController'
 ]);
 
+
+Route::get("/roles",['as'=>'roles.index','uses'=>'Api\RoleController@index'])
+    ->middleware(['auth:api', 'scopes:manage-roles']);
+
+Route::post("/roles",['as'=>'roles.store','uses'=>'Api\RoleController@store'])
+    ->middleware(['auth:api', 'scopes:manage-roles']);
+
+Route::get("/roles/{id}",['as'=>'roles.show','uses'=>'Api\RoleController@show'])
+    ->middleware(['auth:api', 'scopes:manage-roles']);
+
+Route::put("/roles/{id}",['as'=>'roles.update','uses'=>'Api\RoleController@update'])
+    ->middleware(['auth:api', 'scopes:manage-roles']);
+
+Route::delete("/roles/{id}",['as'=>'roles.delete','uses'=>'Api\RoleController@delete'])
+    ->middleware(['auth:api', 'scopes:manage-roles']);
+
+
+Route::get("/users",['as'=>'users.index','uses'=>'Api\UserController@index'])
+    ->middleware(['auth:api', 'scopes:manage-users']);
+
+Route::post("/users",['as'=>'users.store','uses'=>'Api\UserController@store'])
+    ->middleware(['auth:api', 'scopes:manage-users']);
+
+Route::get("/users/{id}",['as'=>'users.show','uses'=>'Api\UserController@show'])
+    ->middleware(['auth:api', 'scopes:manage-users']);
+
+Route::put("/users/{id}",['as'=>'users.update','uses'=>'Api\UserController@update'])
+    ->middleware(['auth:api', 'scopes:manage-users']);
+
+Route::delete("/users/{id}",['as'=>'roles.delete','uses'=>'Api\UserController@delete'])
+    ->middleware(['auth:api', 'scopes:manage-users']);
+
+
+
 Route::resource('comments', 'Api\CommentController')->names([
     'index' => 'api.comments.index'
 ]);

@@ -30,7 +30,7 @@ class RoleController extends Controller
         $request->validated();
         $role = $request->all();
         Role::create($role);
-        return "ok";
+        return response()->json([],204);
     }
 
     /**
@@ -56,7 +56,7 @@ class RoleController extends Controller
         $request->validated();
         $role = Role::find($id);
         $role->save();
-        return "ok";
+        return response()->json([],204);
 
     }
 
@@ -70,6 +70,6 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
         $role->delete();
-        return "ok";
+        return response()->json([],204);
     }
 }

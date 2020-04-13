@@ -41,7 +41,7 @@ trait HasRolesAndPermissions
      * @param $permission
      * @return bool
      */
-    protected function hasPermission($permission)
+    public function hasPermission($permission)
     {
         return (bool) $this->permissions->where('slug', $permission->slug)->count();
     }
@@ -50,7 +50,7 @@ trait HasRolesAndPermissions
      * @param $permission
      * @return bool
      */
-    protected function hasPermissionTo($permission)
+    public function hasPermissionTo($permission)
     {
         return $this->hasPermissionThroughRole($permission) || $this->hasPermission($permission);
     }
@@ -73,7 +73,7 @@ trait HasRolesAndPermissions
      * @param array $permissions
      * @return mixed
      */
-    protected function getAllPermissions(array $permissions)
+    public function getAllPermissions(array $permissions)
     {
         return Permission::whereIn('slug',$permissions)->get();
     }

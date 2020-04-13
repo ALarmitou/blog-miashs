@@ -2,6 +2,7 @@
 
 @section("content")
     <h1>Home</h1>
+    <form-post></form-post>
     <ul>
         @foreach ( $posts as $post )
 

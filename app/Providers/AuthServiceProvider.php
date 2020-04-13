@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Permission;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
@@ -14,7 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
+         'App\Post' => 'App\Policies\PostPolicy',
     ];
 
     /**
@@ -28,10 +29,11 @@ class AuthServiceProvider extends ServiceProvider
 
 
         Passport::routes();
-        Passport::tokensCan([
-            'manage-posts' => 'Manage posts',
-            'manage-users'=>'Manage users',
-            'manage-roles'=>'Manage roles'
-        ]);
+        $permissions = Permission::all();
+        $scopes = array();
+        foreach ($permissions as $permission){
+            $scopes[$permission->slug] = $permission->name;
+        }
+        Passport::tokensCan($scopes);
     }
 }

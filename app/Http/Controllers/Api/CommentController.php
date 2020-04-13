@@ -17,7 +17,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        return response()->json(CommentResource::collection(Comment::all()));
+        return response()->json(CommentResource::collection(Comment::all()),200);
     }
 
     /**
@@ -32,7 +32,7 @@ class CommentController extends Controller
         $comment = $request->all();
         $comment["comment_date"] = now();
         Comment::create($comment);
-        return "ok";
+        return response()->json([],204);
     }
 
     /**
@@ -53,9 +53,15 @@ class CommentController extends Controller
      * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update(CommentRequest $request, $id)
     {
-        //
+        $request->validated();
+        $comment = Comment::find($id);
+        $comment->comment_name = $request->get("comment_name");
+        $comment->comment_email = $request->get('comment_email');
+        $comment->comment_content = $request->get('comment_content');
+        $comment->save();
+        return response()->json([],204);
     }
 
     /**
@@ -64,8 +70,10 @@ class CommentController extends Controller
      * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
+    public function destroy($id)
     {
-        //
+        $comment = Comment::find($id);
+        $comment->delete();
+        return response()->json([],204);
     }
 }

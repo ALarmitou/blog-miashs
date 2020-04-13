@@ -18,7 +18,8 @@ class CommentResource extends JsonResource
             'id' => $this->id,
             'comment_name' => $this->comment_name,
             'comment_email' => $this->comment_email,
-            'comment_content'=> $this->comment_content
+            'comment_content'=> $this->comment_content,
+            'comment_date'=>$this->comment_date
         ];
     }
 }

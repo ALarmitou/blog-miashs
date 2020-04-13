@@ -32,11 +32,10 @@ class PostController extends Controller
         $request->validated();
         $post = $request->all();
         $post["post_date"] = now();
-        $post['user_id'] = 1;
         $post['post_status'] = 'publish';
         $post['post_type'] = 'article';
         Post::create($post);
-        return "ok";
+        return response()->json([],204);
     }
 
     /**
@@ -64,10 +63,9 @@ class PostController extends Controller
         $post->post_title = $request->get("post_title");
         $post->post_name = $request->get("post_name");
         $post->post_content = $request->get('post_content');
-        $post->user_id = 2;
         $post->post_category = $request->get('post_category');
         $post->save();
-        return "ok";
+        return response()->json([],204);
 
     }
 
@@ -81,7 +79,7 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         $post->delete();
-        return "ok";
+        return response()->json([],204);
     }
 
     /**

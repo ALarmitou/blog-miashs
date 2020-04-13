@@ -23,6 +23,11 @@
                     <a>{{ this.clean_user.name }}</a>
                     <ul class="menu vertical">
                         <li>
+                            <a href="/my-profile">
+                                Mon profil
+                            </a>
+                        </li>
+                        <li>
                             <a @click="logout()">
                                 Se déconnecter
                             </a>
@@ -46,7 +51,7 @@
           logout:function(){
               axios.post("/logout").then(data=>{
                   this.$session.destroy();
-                  window.location.reload();
+                  window.location.href = "/";
               }).catch(error=>{
                   console.log("error")
               })

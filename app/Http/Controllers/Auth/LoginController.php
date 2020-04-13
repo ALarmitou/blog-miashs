@@ -43,11 +43,15 @@ class LoginController extends Controller
     protected function authenticated(Request $request, User $user)
     {
         if ($request->ajax()){
-            $testToken = $user->createToken('t',["manage-roles","manage-users"])->accessToken;
+            $scopes = array();
+            foreach ($user->permissions as $permission){
+                $scopes[] = $permission->slug;
+            }
+            $token = $user->createToken('personnal',$scopes)->accessToken;
             return response()->json([
                 'auth' => auth()->check(),
                 'user' => $user,
-                'token'=> $testToken,
+                'token'=>$token,
                 'intended' => $this->redirectPath(),
             ]);
 

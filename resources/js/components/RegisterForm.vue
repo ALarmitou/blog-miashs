@@ -87,6 +87,7 @@
                     axios.post(this.register_route, this.user).then(data => {
                         this.$session.start();
                         this.$session.set('token', "Bearer " + data.data.token);
+                        this.$session.set('user',data.data.user);
                         window.location.href = this.redirect;
                     }).catch(error => {
                         if (error.response.status === 422) {

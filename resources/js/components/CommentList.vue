@@ -2,16 +2,16 @@
 <div>
     <div v-for="comment in this.comments" class="callout">
         <h6>{{comment.comment_name}}<small>{{comment.comment_email}}</small></h6>
-
         <p>{{comment.comment_content}}</p>
         <small>{{comment.comment_date}}</small>
+        <ask-delete v-if="can_delete" type="comment" v-bind:item_id="comment.id" tell-admin="updateComments"></ask-delete>
     </div>
 </div>
 </template>
 
 <script>
     export default {
-        props:['add_comment','post_id'],
+        props:['can_delete','post_id'],
         data(){
             return {
                 'comments': [],

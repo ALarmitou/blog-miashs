@@ -1,31 +1,29 @@
 <template>
     <div>
-        <div class="row">
-            <div id="reveal-dialog" class="reveal" data-reveal>
-                <form>
-                    <fieldset class="fieldset">
-                    <legend>{{this.type}}</legend>
-                        <label for="post_title">Title</label>
-                        <input type="text" name="post_title" v-model="postToAdd.post_title">
-                        <label for="post_name">Name</label>
-                        <input type="text" name="post_name" v-model="postToAdd.post_name">
-                        <label for="post_content">Content</label>
-                        <input type="text" name="post_content" v-model="postToAdd.post_content">
-                        <label for="post_category">Category</label>
-                        <input type="text" name="post_category" v-model="postToAdd.post_category">
-                        <a v-if="!this.post" v-on:click="addPost()" v-bind:class="'button '+this.button_type" data-close>
-                            Ajouter
-                        </a>
-                        <a v-else v-on:click="updatePost()" v-bind:class="'button '+this.button_type" data-close>
-                            Editer
-                        </a>
-                    </fieldset>
-                </form>
-            </div>
-            <p>
-                <a v-on:click="openModal()" v-bind:class="'button '+ this.button_type">{{this.type}}</a>
-            </p>
+        <div id="reveal-dialog" class="reveal" data-reveal>
+            <form>
+                <fieldset class="fieldset">
+                <legend>{{this.type}}</legend>
+                    <label for="post_title">Title</label>
+                    <input type="text" name="post_title" v-model="postToAdd.post_title">
+                    <label for="post_name">Name</label>
+                    <input type="text" name="post_name" v-model="postToAdd.post_name">
+                    <label for="post_content">Content</label>
+                    <input type="text" name="post_content" v-model="postToAdd.post_content">
+                    <label for="post_category">Category</label>
+                    <input type="text" name="post_category" v-model="postToAdd.post_category">
+                    <a v-if="!this.post" v-on:click="addPost()" v-bind:class="'button '+this.button_type" data-close>
+                        Ajouter
+                    </a>
+                    <a v-else v-on:click="updatePost()" v-bind:class="'button '+this.button_type" data-close>
+                        Editer
+                    </a>
+                </fieldset>
+            </form>
         </div>
+        <p>
+            <a v-on:click="openModal()" v-bind:class="'button '+ this.button_type">{{this.type}} un post</a>
+        </p>
     </div>
 </template>
 
@@ -53,7 +51,8 @@
                 "post_title":"",
                 "post_content":"",
                 "post_name":"",
-                "post_category":""
+                "post_category":"",
+                "user_id":this.$session.get("user").id
                 },
             };
         },
@@ -62,7 +61,10 @@
                 if(this.post){
                     this.type = "Editer";
                     this.button_type = "warning";
-                    this.postToAdd = this.post;
+                    if(typeof this.post === "string")
+                        this.postToAdd = JSON.parse(this.post);
+                    else
+                        this.postToAdd = this.post;
                 }
             },
             openModal() {

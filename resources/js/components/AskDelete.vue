@@ -1,18 +1,17 @@
 <template>
     <div>
-        <div class="row">
-            <div id="reveal-dialog" class="reveal" data-reveal>
-                <h4>Êtes-vous sûr de supprimer ce {{type}} ?</h4>
-                <div class="row">
-                    <a class="columns small-4 button alert" v-on:click="deleteItem()" data-close>Supprimer</a>
-                    <div class="columns small-4"></div>
-                    <a class="columns small-4 button secondary" data-close>Annuler</a>
-                </div>
+
+        <div id="reveal-dialog" class="reveal" data-reveal>
+            <h4>Êtes-vous sûr de supprimer ce {{type}} ?</h4>
+            <div class="row">
+                <a class="columns small-4 button alert" v-on:click="deleteItem()" data-close>Supprimer</a>
+                <div class="columns small-4"></div>
+                <a class="columns small-4 button secondary" data-close>Annuler</a>
             </div>
-            <p>
-                <a v-on:click="openModal()" class="button alert ">Supprimer</a>
-            </p>
         </div>
+        <p>
+            <a v-on:click="openModal()" class="button alert ">Supprimer</a>
+        </p>
     </div>
 </template>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Permission;
+use App\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
@@ -14,7 +15,8 @@ class UserRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $id = $this->route('id');
+        return auth()->user()->can("manage-users") || $this->user()->id == $id;
     }
 
     /**

@@ -63,8 +63,8 @@
             axios.post(this.login_route, this.user).then(data=>{
                 this.$session.start();
                 this.$session.set('token',"Bearer "+data.data.token);
-                console.log(data.data.token);
-                //window.location.href = this.redirect;
+                this.$session.set('user',data.data.user);
+                window.location.href = this.redirect;
             }).catch(error=>{
                 if (error.response.status === 422){
                     this.assignErrors(error.response.data.errors);

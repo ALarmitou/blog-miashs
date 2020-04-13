@@ -25,7 +25,7 @@ Route::post("/posts",['as'=>'posts.store','uses'=>'Api\PostController@store'])
 Route::get("/posts/{id}",['as'=>'posts.show','uses'=>'Api\PostController@show']);
 
 Route::put("/posts/{id}",['as'=>'posts.update','uses'=>'Api\PostController@update'])
-    ->middleware(['auth:api', 'scopes:manage-posts']);
+    ->middleware(['auth:api']);
 
 Route::delete("/posts/{id}",['as'=>'posts.delete','uses'=>'Api\PostController@delete'])
     ->middleware(['auth:api', 'scopes:manage-posts']);
@@ -63,10 +63,13 @@ Route::get("/users/{id}",['as'=>'users.show','uses'=>'Api\UserController@show'])
     ->middleware(['auth:api', 'scopes:manage-users']);
 
 Route::put("/users/{id}",['as'=>'users.update','uses'=>'Api\UserController@update'])
-    ->middleware(['auth:api', 'scopes:manage-users']);
+    ->middleware(['auth:api']);
 
 Route::delete("/users/{id}",['as'=>'roles.delete','uses'=>'Api\UserController@delete'])
     ->middleware(['auth:api', 'scopes:manage-users']);
+
+Route::put("/users/{id}/password",['as'=>'users.change.password','uses'=>'Api\UserController@changePassword'])
+    ->middleware(['auth:api']);
 
 
 

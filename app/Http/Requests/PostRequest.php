@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Post;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PostRequest extends FormRequest
@@ -13,7 +14,8 @@ class PostRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $post = Post::find($this->route('id'));
+        return auth()->user()->can("manage-posts") || $post->user_id == $this->user()->id;
     }
 
     /**
@@ -27,7 +29,8 @@ class PostRequest extends FormRequest
             "post_name"=>"required",
             "post_title"=>"required",
             "post_content"=>"required",
-            "post_category"=>"required"
+            "post_category"=>"required",
+            "user_id"=>"required"
         ];
     }
 }

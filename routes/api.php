@@ -13,14 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::get("/posts",['as'=>'api.posts.index','uses'=>'Api\PostController@index']);
 
 Route::post("/posts",['as'=>'posts.store','uses'=>'Api\PostController@store'])
-    ->middleware(['auth:api', 'scopes:manage-posts']);
+    ->middleware(['auth:api', 'scope:create-posts,manage-posts']);
 
 Route::get("/posts/{id}",['as'=>'posts.show','uses'=>'Api\PostController@show']);
 
@@ -31,6 +27,9 @@ Route::delete("/posts/{id}",['as'=>'posts.delete','uses'=>'Api\PostController@de
     ->middleware(['auth:api', 'scopes:manage-posts']);
 
 Route::get("/posts/{id}/comments",['as'=>'posts.comments.show','uses'=>'Api\PostController@showComments']);
+
+Route::get("/files",['as'=>'posts.files.index','uses'=>'Api\PostController@indexFiles']);
+
 
 Route::apiResources([
     'comments'=>'Api\CommentController'

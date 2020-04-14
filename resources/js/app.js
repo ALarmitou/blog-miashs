@@ -6,9 +6,11 @@
 
 require('./foundation');
 import VueSession from "vue-session";
+import Multiselect from 'vue-multiselect'
+import VueCarousel from 'vue-carousel';
 window.Vue = require('vue');
 window.Vue.use(VueSession);
-
+window.Vue.use(VueCarousel);
 window.session = new Vue();
 
 /**
@@ -23,6 +25,7 @@ window.session = new Vue();
 const files = require.context('./', true, /\.vue$/i);
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
+Vue.component('multiselect', Multiselect);
 /*
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('form-comment', require('./components/FormComment.vue').default);

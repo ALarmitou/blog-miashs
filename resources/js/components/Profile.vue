@@ -6,7 +6,7 @@
                     <li class="tabs-title is-active"><a href="#profile" aria-selected="true">Mon profil</a></li>
                     <li class="tabs-title"><a href="#password">Changer mon mot de passe</a></li>
                     <li class="tabs-title"><a href="#posts">Mes posts</a></li>
-                    <li class="tabs-title"><a href="#roles">Roles et permissions</a></li>
+                    <li class="tabs-title"><a href="#roles">Rôles</a></li>
                 </ul>
             </div>
             <div class="column medium-9">
@@ -54,13 +54,10 @@
                     </div>
                     <div class="tabs-panel" id="roles">
                     <div class="card">
-                        <div class="card-divider">Vos rôles et permissions</div>
+                        <div class="card-divider">Mes rôles</div>
                         <div class="card-section">
                             <ul class="menu">
                                 <li v-for="role in clean_roles">{{role.name}}</li>
-                            </ul>
-                            <ul class="menu vertical">
-                                <li v-for="permission in clean_permissions">{{permission.name}}</li>
                             </ul>
                         </div>
                     </div>
@@ -73,7 +70,7 @@
 
 <script>
     export default {
-        props:['user','roles','permissions','posts'],
+        props:['user','roles','posts'],
         data:function(){
             return {
                 profile:{
@@ -83,7 +80,6 @@
                     password_confirmation:''
                 },
                 clean_roles:[],
-                clean_permissions:[],
                 own_posts:[],
                 editing:true
             }
@@ -111,7 +107,6 @@
             $(this.$el).foundation();
             this.profile = JSON.parse(this.user);
             this.clean_roles = JSON.parse(this.roles);
-            this.clean_permissions = JSON.parse(this.permissions);
             this.own_posts = JSON.parse(this.posts);
         }
     }

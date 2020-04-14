@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Comment;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MultipleUploadRequest;
 use App\Http\Requests\PostRequest;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\PostResource;
@@ -29,13 +30,33 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        $request->validated();
         $post = $request->all();
         $post["post_date"] = now();
         $post['post_status'] = 'publish';
-        $post['post_type'] = 'article';
-        Post::create($post);
-        return response()->json([],204);
+
+        $post = Post::create($post);
+        if($request->has('photos')) {
+            $photoIds = json_decode($request->photos);
+            foreach ($photoIds as $photo) {
+                $image = Post::find($photo);
+                $image->posts()->attach($post);
+            }
+        }
+        if($request->has('new_photos')) {
+            foreach ($request->new_photos as $photo) {
+                $photo->store('public');
+                $imageStored = Post::create([
+                    'post_name' => $photo->hashName(),
+                    'post_type' => 'file',
+                    'post_title' => $photo->getClientOriginalName(),
+                    'post_date' => now(),
+                    'post_status' => 'publish',
+                    'user_id' => $request->user_id
+                ]);
+                $imageStored->posts()->attach($post);
+            }
+        }
+        return response()->json($post,201);
     }
 
     /**
@@ -60,12 +81,34 @@ class PostController extends Controller
     {
         $request->validated();
         $post = Post::find($id);
-        $post->post_title = $request->get("post_title");
-        $post->post_name = $request->get("post_name");
-        $post->post_content = $request->get('post_content');
-        $post->post_category = $request->get('post_category');
+        $post->post_title = $request->post_title;
+        $post->post_name = $request->post_name;
+        $post->post_content = $request->post_content;
+        $post->post_category = $request->post_category;
         $post->save();
-        return response()->json([],204);
+        $post->files()->detach();
+        if($request->has('photos')) {
+            $photoIds = json_decode($request->photos);
+            foreach ($photoIds as $photo) {
+                $image = Post::find($photo);
+                $image->posts()->attach($post);
+            }
+        }
+        if($request->has('new_photos')) {
+            foreach ($request->new_photos as $photo) {
+                $photo->store('public');
+                $imageStored = Post::create([
+                    'post_name' => $photo->hashName(),
+                    'post_type' => 'file',
+                    'post_title' => $photo->getClientOriginalName(),
+                    'post_date' => now(),
+                    'post_status' => 'publish',
+                    'user_id' => $request->user_id
+                ]);
+                $imageStored->posts()->attach($post);
+            }
+        }
+        return response()->json($post,201);
 
     }
 
@@ -78,6 +121,8 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
+        $post->files()->delete();
+        $post->posts()->delete();
         $post->delete();
         return response()->json([],204);
     }
@@ -92,4 +137,17 @@ class PostController extends Controller
     public function showComments($id){
         return response()->json(CommentResource::collection(Comment::where("post_id",$id)->get()));
     }
+
+    /**
+     * Get all files
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function indexFiles(){
+        return PostResource::collection(Post::where('post_type','file')->get());
+    }
+
+
 }

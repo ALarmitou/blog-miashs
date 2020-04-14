@@ -15,7 +15,7 @@ class PostRequest extends FormRequest
     public function authorize()
     {
         $post = Post::find($this->route('id'));
-        return auth()->user()->can("manage-posts") || $post->user_id == $this->user()->id;
+        return auth()->user()->can("manage-posts") || auth()->user()->can("create-posts") || $post->user_id == $this->user()->id;
     }
 
     /**
@@ -25,12 +25,16 @@ class PostRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             "post_name"=>"required",
             "post_title"=>"required",
             "post_content"=>"required",
             "post_category"=>"required",
-            "user_id"=>"required"
+            "user_id"=>"required",
+            "photos"=>"nullable|string",
+            "new_photos"=>"nullable",
+            "new_photos.*"=>"image|mimes:jpeg,bmp,png|max:2000"
         ];
+        return $rules;
     }
 }

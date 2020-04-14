@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Post;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -17,7 +18,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $posts = \App\Post::orderBy('id', 'desc')->take(3)->get();
+        $posts = Post::where("post_type","article")->orderBy('id', 'desc')->take(3)->get();
         return view('welcome',array("posts"=>$posts));
     }
 }

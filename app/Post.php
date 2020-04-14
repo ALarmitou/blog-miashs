@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
+
     protected $table = "posts";
     protected $fillable = [
         "user_id",
@@ -26,5 +27,13 @@ class Post extends Model
     public function comments()
     {
         return $this->hasMany('App\Comment');
+    }
+
+    public function posts(){
+        return $this->belongsToMany('App\Post','posts_posts','post_post_id','post_file_id');
+    }
+
+    public function files(){
+        return $this->belongsToMany('App\Post','posts_posts','post_file_id','post_post_id');
     }
 }

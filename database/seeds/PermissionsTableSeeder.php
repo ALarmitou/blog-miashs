@@ -23,6 +23,11 @@ class PermissionsTableSeeder extends Seeder
         $createTasks->save();
 
         $createTasks = new Permission();
+        $createTasks->name = 'Create posts';
+        $createTasks->slug = 'create-posts';
+        $createTasks->save();
+
+        $createTasks = new Permission();
         $createTasks->name = 'Manage comments';
         $createTasks->slug = 'manage-comments';
         $createTasks->save();

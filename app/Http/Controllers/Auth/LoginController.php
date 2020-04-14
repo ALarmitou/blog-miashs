@@ -44,8 +44,12 @@ class LoginController extends Controller
     {
         if ($request->ajax()){
             $scopes = array();
-            foreach ($user->permissions as $permission){
-                $scopes[] = $permission->slug;
+            foreach($user->roles as $role) {
+                foreach ($role->permissions as $permission) {
+                    if(!in_array($permission->slug,$scopes)) {
+                        $scopes[] = $permission->slug;
+                    }
+                }
             }
             $token = $user->createToken('personnal',$scopes)->accessToken;
             return response()->json([

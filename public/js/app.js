@@ -3067,6 +3067,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["user"],
   data: function data() {
@@ -3085,6 +3090,13 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log("error");
       });
+    },
+    isAdmin: function isAdmin() {
+      for (var index in this.clean_user.roles) {
+        if (this.clean_user.roles[index].slug == "admin") return true;
+      }
+
+      return false;
     }
   },
   mounted: function mounted() {
@@ -46382,7 +46394,7 @@ var render = function() {
             "button",
             {
               staticClass: "columns small-4 button",
-              attrs: { type: "button" },
+              attrs: { disabled: _vm.links.prev === null, type: "button" },
               on: {
                 click: function($event) {
                   return _vm.getData(_vm.links.prev)
@@ -46398,7 +46410,7 @@ var render = function() {
             "button",
             {
               staticClass: "columns small-4 button",
-              attrs: { type: "button" },
+              attrs: { disabled: _vm.links.next === null, type: "button" },
               on: {
                 click: function($event) {
                   return _vm.getData(_vm.links.next)
@@ -48057,6 +48069,16 @@ var render = function() {
                 _vm._v(" "),
                 _c("ul", { staticClass: "menu vertical" }, [
                   _vm._m(3),
+                  _vm._v(" "),
+                  _vm.isAdmin()
+                    ? _c("li", [
+                        _c("a", { attrs: { href: "/admin" } }, [
+                          _vm._v(
+                            "\n                            Tableau de bord admin\n                        "
+                          )
+                        ])
+                      ])
+                    : _vm._e(),
                   _vm._v(" "),
                   _c("li", [
                     _c(

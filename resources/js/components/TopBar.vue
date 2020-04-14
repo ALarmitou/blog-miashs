@@ -27,6 +27,11 @@
                                 Mon profil
                             </a>
                         </li>
+                        <li v-if="isAdmin()">
+                            <a href="/admin">
+                                Tableau de bord admin
+                            </a>
+                        </li>
                         <li>
                             <a @click="logout()">
                                 Se déconnecter
@@ -48,14 +53,21 @@
             }
         },
         methods:{
-          logout:function(){
-              axios.post("/logout").then(data=>{
+            logout:function(){
+                axios.post("/logout").then(data=>{
                   this.$session.destroy();
                   window.location.href = "/";
-              }).catch(error=>{
+                }).catch(error=>{
                   console.log("error")
-              })
-          }
+                });
+            },
+            isAdmin:function(){
+                for(let index in this.clean_user.roles){
+                    if(this.clean_user.roles[index].slug=="admin")
+                        return true;
+                }
+                return false;
+            }
         },
         mounted(){
             $(this.$el).foundation();

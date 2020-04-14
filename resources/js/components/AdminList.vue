@@ -16,9 +16,9 @@
             </tbody>
         </table>
         <div v-if="this.links !=={}" class="row">
-            <button type="button" class="columns small-4 button" v-on:click="getData(links.prev)">Prev</button>
+            <button :disabled="links.prev===null" type="button" class="columns small-4 button" v-on:click="getData(links.prev)">Prev</button>
             <div class="columns small-4"></div>
-            <button type="button" class="columns small-4 button" v-on:click="getData(links.next)">Next</button>
+            <button :disabled="links.next===null" type="button" class="columns small-4 button" v-on:click="getData(links.next)">Next</button>
         </div>
     </div>
 </template>

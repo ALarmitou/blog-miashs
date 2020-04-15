@@ -168,12 +168,14 @@
                         this.postToSend.append(index,this.post[index]);
                     }
                 }
-                if(this.post.photos.length>0){
-                    let chosenPhotos = [];
-                    for(let index in this.post.photos){
-                        chosenPhotos.push(this.post.photos[index].id);
+                if(this.post.photos) {
+                    if (this.post.photos.length > 0) {
+                        let chosenPhotos = [];
+                        for (let index in this.post.photos) {
+                            chosenPhotos.push(this.post.photos[index].id);
+                        }
+                        this.postToSend.append("photos", JSON.stringify(chosenPhotos));
                     }
-                    this.postToSend.append("photos",JSON.stringify(chosenPhotos));
                 }
             }
         },

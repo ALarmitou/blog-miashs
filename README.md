@@ -14,6 +14,7 @@
 <p>Ouvrez un terminal de commande et déplacez-vous à la racine du projet.</p>
 <p>Utilisez les commandes suivantes :</p>
 <ul>
+    <li>cp .env.example .env</li>
     <li>touch database/database.sqlite</li>
     <li>composer install</li>
     <li>npm install</li>

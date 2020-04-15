@@ -1978,6 +1978,51 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AdminMenu.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AdminMenu.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      models: []
+    };
+  },
+  methods: {
+    getModels: function getModels() {
+      var _this = this;
+
+      axios.get("/api/admin-menu", {
+        headers: {
+          "Authorization": this.$session.get('token')
+        }
+      }).then(function (data) {
+        _this.models = data.data;
+      });
+    },
+    isActive: function isActive(model) {
+      return window.location.href.includes(model) ? "is-active" : "";
+    }
+  },
+  mounted: function mounted() {
+    this.getModels();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AskDelete.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AskDelete.vue?vue&type=script&lang=js& ***!
@@ -2021,7 +2066,11 @@ __webpack_require__.r(__webpack_exports__);
     deleteItem: function deleteItem() {
       var _this = this;
 
-      axios["delete"]('/api/' + this.type + 's/' + this.item_id).then(function (data) {
+      axios["delete"]('/api/' + this.type + 's/' + this.item_id, {
+        headers: {
+          "Authorization": this.$session.get('token')
+        }
+      }).then(function (data) {
         window.session.$emit(_this.tellAdmin, "do-it");
       });
     }
@@ -2228,13 +2277,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["post", "photos"],
+  //props:["post","photos"],
+  props: ["post_id"],
   data: function data() {
     return {
       type: "Ajouter",
       button_type: 'primary',
       photosToChoose: [],
-      postToAdd: {
+      post: {
         "post_title": "",
         "post_content": "",
         "post_name": "",
@@ -2258,8 +2308,8 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   watch: {
-    post: function post(o, n) {
-      if (o.id !== n.id) {
+    post_id: function post_id(o, n) {
+      if (o !== n) {
         this.initContent();
       }
     }
@@ -2268,21 +2318,10 @@ __webpack_require__.r(__webpack_exports__);
     initContent: function initContent() {
       this.getPhotos();
 
-      if (this.post) {
+      if (this.post_id) {
         this.type = "Editer";
         this.button_type = "warning";
-        if (typeof this.post === "string") this.postToAdd = JSON.parse(this.post);else this.postToAdd = this.post;
-
-        if (typeof this.photos === "string") {
-          var cleanPhotos = JSON.parse(this.photos);
-
-          for (var index in cleanPhotos) {
-            this.databasePhotos.push({
-              id: cleanPhotos[index].id,
-              name: cleanPhotos[index].post_title
-            });
-          }
-        }
+        this.getPost();
       }
     },
     openModal: function openModal() {
@@ -2307,7 +2346,7 @@ __webpack_require__.r(__webpack_exports__);
           _this.alertUser.title = "Echec !";
 
           if (error.response.status === 401) {
-            _this.alertUser.message = "Vous n'êtes pas authentifé !";
+            _this.alertUser.message = "Vous n'êtes pas authentifié !";
           }
 
           if (error.response.status === 422) {
@@ -2323,7 +2362,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.prepareData();
       this.postToSend.append("_method", "PUT");
-      axios.post('/api/posts/' + this.postToAdd.id, this.postToSend, {
+      axios.post('/api/posts/' + this.post.id, this.postToSend, {
         headers: {
           "Authorization": this.$session.get('token')
         }
@@ -2333,12 +2372,14 @@ __webpack_require__.r(__webpack_exports__);
         _this2.alertUser.message = "Le post a été modifié avec succès !";
         _this2.state = "success";
       })["catch"](function (error) {
+        console.log(error.response.data);
+
         if (error.response.status !== 500) {
           _this2.state = "alert";
           _this2.alertUser.title = "Echec !";
 
           if (error.response.status === 401) {
-            _this2.alertUser.message = "Vous n'êtes pas authentifé !";
+            _this2.alertUser.message = "Vous n'êtes pas authentifié !";
           }
 
           if (error.response.status === 422) {
@@ -2349,22 +2390,28 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    getPhotos: function getPhotos() {
+    getPost: function getPost() {
       var _this3 = this;
+
+      axios.get("/api/posts/" + this.post_id, {
+        headers: {
+          "Authorization": this.$session.get('token')
+        }
+      }).then(function (data) {
+        _this3.post = data.data;
+      })["catch"](function (error) {
+        console.log(error.response.data);
+      });
+    },
+    getPhotos: function getPhotos() {
+      var _this4 = this;
 
       axios.get('/api/files', {
         headers: {
           "Authorization": this.$session.get('token')
         }
       }).then(function (data) {
-        var files = data.data.data;
-
-        for (var index in files) {
-          _this3.photosToChoose.push({
-            id: files[index].id,
-            name: files[index].post_title
-          });
-        }
+        _this4.photosToChoose = data.data.data;
       });
     },
     filesToUpload: function filesToUpload(event) {
@@ -2375,20 +2422,25 @@ __webpack_require__.r(__webpack_exports__);
         this.postToSend.append("new_photos[]", files[index]);
       }
 
-      document.getElementById("new_photos[" + this.postToAdd.id + "]").value = [];
+      document.getElementById("new_photos[" + this.post.id + "]").value = [];
     },
     prepareData: function prepareData() {
-      for (var index in this.postToAdd) {
-        this.postToSend.append(index, this.postToAdd[index]);
+      for (var index in this.post) {
+        if (index === "author") {
+          this.postToSend.append("user_id", this.post[index].id);
+        } else {
+          this.postToSend.append(index, this.post[index]);
+        }
       }
 
-      if (this.databasePhotos.length > 0) {
+      if (this.post.photos.length > 0) {
         var chosenPhotos = [];
 
-        for (var _index in this.databasePhotos) {
-          chosenPhotos.push(this.databasePhotos[_index].id);
+        for (var _index in this.post.photos) {
+          chosenPhotos.push(this.post.photos[_index].id);
         }
 
+        console.log(chosenPhotos);
         this.postToSend.append("photos", JSON.stringify(chosenPhotos));
       }
     }
@@ -2434,6 +2486,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["role"],
   mounted: function mounted() {
@@ -2454,42 +2514,108 @@ __webpack_require__.r(__webpack_exports__);
       type: "Ajouter",
       button_type: 'primary',
       roleToAdd: {
-        "libelle": ""
+        "name": "",
+        "slug": "",
+        "permissions": ""
+      },
+      perms: [],
+      chosenPerms: [],
+      alertUser: {
+        title: '',
+        message: ''
       }
     };
   },
   methods: {
     initContent: function initContent() {
+      this.getPermissions();
+
       if (this.role) {
         this.type = "Editer";
         this.button_type = "warning";
         this.roleToAdd = this.role;
+        this.chosenPerms = this.role.permissions;
       }
     },
     openModal: function openModal() {
       this.form.open();
     },
     addRole: function addRole() {
-      axios.post('/api/roles', this.roleToAdd, {
+      var _this = this;
+
+      this.prepareData();
+      axios.post('/api/roles', this.prepareData(), {
         headers: {
           "Authorization": this.$session.get('token')
         }
       }).then(function (data) {
         console.log(data);
+        _this.alertUser.title = "Succès !";
+        _this.alertUser.message = "Le role a été ajouté avec succès !";
+        _this.state = "success";
       })["catch"](function (error) {
-        console.log(error);
+        if (error.response.status !== 500) {
+          _this.state = "alert";
+          _this.alertUser.title = "Echec !";
+
+          if (error.response.status === 401) {
+            _this.alertUser.message = "Vous n'êtes pas authentifié !";
+          }
+
+          if (error.response.status === 422) {
+            for (var index in error.response.data.errors) {
+              _this.alertUser.message += error.response.data.errors[index] + "\n";
+            }
+          }
+        }
       });
     },
     updateRole: function updateRole() {
-      axios.put('/api/roles/' + this.roleToAdd.id, this.roleToAdd, {
+      var _this2 = this;
+
+      axios.put('/api/roles/' + this.roleToAdd.id, this.prepareData(), {
         headers: {
           "Authorization": this.$session.get('token')
         }
       }).then(function (data) {
         console.log(data);
+        _this2.alertUser.title = "Succès !";
+        _this2.alertUser.message = "Le role a été modifié avec succès !";
+        _this2.state = "success";
       })["catch"](function (error) {
-        console.log(error);
+        if (error.response.status !== 500) {
+          _this2.state = "alert";
+          _this2.alertUser.title = "Echec !";
+
+          if (error.response.status === 401) {
+            _this2.alertUser.message = "Vous n'êtes pas authentifié !";
+          }
+
+          if (error.response.status === 422) {
+            for (var index in error.response.data.errors) {
+              _this2.alertUser.message += error.response.data.errors[index] + "\n";
+            }
+          }
+        }
       });
+    },
+    getPermissions: function getPermissions() {
+      var _this3 = this;
+
+      axios.get('/api/permissions', {
+        headers: {
+          "Authorization": this.$session.get('token')
+        }
+      }).then(function (data) {
+        _this3.perms = data.data.data;
+      });
+    },
+    prepareData: function prepareData() {
+      return {
+        "name": this.roleToAdd.name,
+        "slug": this.roleToAdd.slug,
+        "permissions": JSON.stringify(this.chosenPerms)
+      };
     }
   },
   destroyed: function destroyed() {
@@ -2721,6 +2847,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2811,7 +2941,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['user', 'roles', 'posts'],
   data: function data() {
     return {
       profile: {},
@@ -2826,11 +2955,15 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     editProfile: function editProfile() {
+      var _this = this;
+
       axios.put("/api/users/" + this.profile.id, this.profile, {
         headers: {
           "Authorization": this.$session.get('token')
         }
-      }).then(function (data) {})["catch"](function (error) {
+      }).then(function (data) {
+        _this.$session.set('user', data.data);
+      })["catch"](function (error) {
         console.log(error.response.data);
       });
     },
@@ -2844,13 +2977,24 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error.response.data);
       });
+    },
+    getOwnPosts: function getOwnPosts() {
+      var _this2 = this;
+
+      axios.get("/api/users/" + this.profile.id + "/posts", {
+        headers: {
+          "Authorization": this.$session.get('token')
+        }
+      }).then(function (data) {
+        _this2.own_posts = data.data;
+      });
     }
   },
   mounted: function mounted() {
     $(this.$el).foundation();
-    this.profile = JSON.parse(this.user);
-    this.clean_roles = JSON.parse(this.roles);
-    this.own_posts = JSON.parse(this.posts);
+    this.profile = this.$session.get("user");
+    this.clean_roles = this.profile.roles;
+    this.getOwnPosts();
   }
 });
 
@@ -3007,6 +3151,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -3073,7 +3222,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["user"],
   data: function data() {
     return {
       clean_user: {}
@@ -3101,7 +3249,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     $(this.$el).foundation();
-    if (this.user) this.clean_user = JSON.parse(this.user);
+    if (this.$session.exists() && this.$session.get("user")) this.clean_user = this.$session.get("user");
   }
 });
 
@@ -3117,6 +3265,9 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AskDelete__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AskDelete */ "./resources/js/components/AskDelete.vue");
+//
+//
+//
 //
 //
 //
@@ -46430,6 +46581,41 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AdminMenu.vue?vue&type=template&id=88ecbf1a&scoped=true&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AdminMenu.vue?vue&type=template&id=88ecbf1a&scoped=true& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "ul",
+    { staticClass: "menu align-center" },
+    _vm._l(_vm.models, function(model) {
+      return _c("li", { class: _vm.isActive(model.toLowerCase()) }, [
+        _c("a", { attrs: { href: "/admin/" + model.toLowerCase() } }, [
+          _vm._v(_vm._s(model))
+        ])
+      ])
+    }),
+    0
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AskDelete.vue?vue&type=template&id=1dc3b5a9&":
 /*!************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AskDelete.vue?vue&type=template&id=1dc3b5a9& ***!
@@ -46725,7 +46911,7 @@ var render = function() {
       ? _c("div", { class: "callout " + this.state }, [
           _c("h5", [_vm._v(_vm._s(_vm.alertUser.title))]),
           _vm._v(" "),
-          _c("p", [_c("pre", [_vm._v(_vm._s(_vm.alertUser.message))])]),
+          _c("pre", [_vm._v(_vm._s(_vm.alertUser.message))]),
           _vm._v(" "),
           _c(
             "a",
@@ -46769,18 +46955,18 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.postToAdd.post_title,
-                    expression: "postToAdd.post_title"
+                    value: _vm.post.post_title,
+                    expression: "post.post_title"
                   }
                 ],
                 attrs: { type: "text", name: "post_title" },
-                domProps: { value: _vm.postToAdd.post_title },
+                domProps: { value: _vm.post.post_title },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(_vm.postToAdd, "post_title", $event.target.value)
+                    _vm.$set(_vm.post, "post_title", $event.target.value)
                   }
                 }
               }),
@@ -46792,18 +46978,18 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.postToAdd.post_name,
-                    expression: "postToAdd.post_name"
+                    value: _vm.post.post_name,
+                    expression: "post.post_name"
                   }
                 ],
                 attrs: { type: "text", name: "post_name" },
-                domProps: { value: _vm.postToAdd.post_name },
+                domProps: { value: _vm.post.post_name },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(_vm.postToAdd, "post_name", $event.target.value)
+                    _vm.$set(_vm.post, "post_name", $event.target.value)
                   }
                 }
               }),
@@ -46817,18 +47003,18 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.postToAdd.post_content,
-                    expression: "postToAdd.post_content"
+                    value: _vm.post.post_content,
+                    expression: "post.post_content"
                   }
                 ],
                 attrs: { type: "text", name: "post_content" },
-                domProps: { value: _vm.postToAdd.post_content },
+                domProps: { value: _vm.post.post_content },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(_vm.postToAdd, "post_content", $event.target.value)
+                    _vm.$set(_vm.post, "post_content", $event.target.value)
                   }
                 }
               }),
@@ -46842,22 +47028,18 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.postToAdd.post_category,
-                    expression: "postToAdd.post_category"
+                    value: _vm.post.post_category,
+                    expression: "post.post_category"
                   }
                 ],
                 attrs: { type: "text", name: "post_category" },
-                domProps: { value: _vm.postToAdd.post_category },
+                domProps: { value: _vm.post.post_category },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(
-                      _vm.postToAdd,
-                      "post_category",
-                      $event.target.value
-                    )
+                    _vm.$set(_vm.post, "post_category", $event.target.value)
                   }
                 }
               }),
@@ -46875,15 +47057,15 @@ var render = function() {
                   "clear-on-select": false,
                   "preserve-search": true,
                   placeholder: "Pick some",
-                  label: "name",
-                  "track-by": "name"
+                  label: "post_title",
+                  "track-by": "post_title"
                 },
                 model: {
-                  value: _vm.databasePhotos,
+                  value: _vm.post.photos,
                   callback: function($$v) {
-                    _vm.databasePhotos = $$v
+                    _vm.$set(_vm.post, "photos", $$v)
                   },
-                  expression: "databasePhotos"
+                  expression: "post.photos"
                 }
               }),
               _vm._v(" "),
@@ -46896,12 +47078,12 @@ var render = function() {
                   type: "file",
                   multiple: "multiple",
                   name: "new_photos",
-                  id: "new_photos[" + this.postToAdd.id + "]"
+                  id: "new_photos[" + this.post_id + "]"
                 },
                 on: { change: _vm.filesToUpload }
               }),
               _vm._v(" "),
-              !this.post
+              !this.post_id
                 ? _c(
                     "a",
                     {
@@ -46974,38 +47156,109 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "row" }, [
-      _c(
-        "div",
-        {
-          staticClass: "reveal",
-          attrs: { id: "reveal-dialog", "data-reveal": "" }
-        },
-        [
-          _c("form", [
-            _c("fieldset", { staticClass: "fieldset" }, [
+    _vm.alertUser.message !== ""
+      ? _c("div", { class: "callout " + this.state }, [
+          _c("h5", [_vm._v(_vm._s(_vm.alertUser.title))]),
+          _vm._v(" "),
+          _c("pre", [_vm._v(_vm._s(_vm.alertUser.message))]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "button alert",
+              on: {
+                click: function($event) {
+                  _vm.alertUser.message = ""
+                }
+              }
+            },
+            [_vm._v("Fermer")]
+          )
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "reveal",
+        attrs: { id: "reveal-dialog", "data-reveal": "" }
+      },
+      [
+        _c("form", [
+          _c(
+            "fieldset",
+            { staticClass: "fieldset" },
+            [
               _c("legend", [_vm._v(_vm._s(this.type))]),
               _vm._v(" "),
-              _c("label", { attrs: { for: "libelle" } }, [_vm._v("Libelle")]),
+              _c("label", { attrs: { for: "name" } }, [_vm._v("Name")]),
               _vm._v(" "),
               _c("input", {
                 directives: [
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.roleToAdd.libelle,
-                    expression: "roleToAdd.libelle"
+                    value: _vm.roleToAdd.name,
+                    expression: "roleToAdd.name"
                   }
                 ],
-                attrs: { type: "text", name: "libelle" },
-                domProps: { value: _vm.roleToAdd.libelle },
+                attrs: { type: "text", name: "name" },
+                domProps: { value: _vm.roleToAdd.name },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.$set(_vm.roleToAdd, "libelle", $event.target.value)
+                    _vm.$set(_vm.roleToAdd, "name", $event.target.value)
                   }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "slug" } }, [_vm._v("Slug")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.roleToAdd.slug,
+                    expression: "roleToAdd.slug"
+                  }
+                ],
+                attrs: { type: "text", name: "slug" },
+                domProps: { value: _vm.roleToAdd.slug },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.roleToAdd, "slug", $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "permissions" } }, [
+                _vm._v("Selectionner fichiers")
+              ]),
+              _vm._v(" "),
+              _c("multiselect", {
+                attrs: {
+                  name: "permissions",
+                  options: _vm.perms,
+                  multiple: true,
+                  "close-on-select": false,
+                  "clear-on-select": false,
+                  "preserve-search": true,
+                  placeholder: "Pick some",
+                  label: "name",
+                  "track-by": "name"
+                },
+                model: {
+                  value: _vm.chosenPerms,
+                  callback: function($$v) {
+                    _vm.chosenPerms = $$v
+                  },
+                  expression: "chosenPerms"
                 }
               }),
               _vm._v(" "),
@@ -47021,11 +47274,7 @@ var render = function() {
                         }
                       }
                     },
-                    [
-                      _vm._v(
-                        "\n                        Ajouter\n                    "
-                      )
-                    ]
+                    [_vm._v("\n                    Ajouter\n                ")]
                   )
                 : _c(
                     "a",
@@ -47038,31 +47287,28 @@ var render = function() {
                         }
                       }
                     },
-                    [
-                      _vm._v(
-                        "\n                        Editer\n                    "
-                      )
-                    ]
+                    [_vm._v("\n                    Editer\n                ")]
                   )
-            ])
-          ])
-        ]
-      ),
-      _vm._v(" "),
-      _c("p", [
-        _c(
-          "a",
-          {
-            class: "button " + this.button_type,
-            on: {
-              click: function($event) {
-                return _vm.openModal()
-              }
+            ],
+            1
+          )
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c("p", [
+      _c(
+        "a",
+        {
+          class: "button " + this.button_type,
+          on: {
+            click: function($event) {
+              return _vm.openModal()
             }
-          },
-          [_vm._v(_vm._s(this.type))]
-        )
-      ])
+          }
+        },
+        [_vm._v(_vm._s(this.type))]
+      )
     ])
   ])
 }
@@ -47374,8 +47620,20 @@ var render = function() {
     [
       _vm._l(_vm.post, function(content) {
         return _c("td", [
-          _vm.post.post_type === "article" && content.length > 50
-            ? _c("p", [_vm._v(_vm._s(content.substring(0, 50) + "..."))])
+          _vm.post.post_type === "article" &&
+          typeof content === "string" &&
+          content.length > 50
+            ? _c("p", [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(content.substring(0, 50) + "...") +
+                    "\n        "
+                )
+              ])
+            : content === _vm.post.author
+            ? _c("p", [_vm._v(_vm._s(content.name))])
+            : content === _vm.post.photos
+            ? _c("p", [_vm._v(_vm._s(content.length))])
             : _vm.post.post_type === "file" && content === _vm.post.post_name
             ? _c("img", {
                 attrs: { src: _vm.imgPath + "/" + content, alt: "" }
@@ -47388,7 +47646,7 @@ var render = function() {
         "td",
         { attrs: { align: "center" } },
         [
-          _c("form-post", { attrs: { post: this.post } }),
+          _c("form-post", { attrs: { post_id: this.post.id } }),
           _vm._v(" "),
           _c("ask-delete", {
             attrs: {
@@ -47999,7 +48257,23 @@ var render = function() {
     "tr",
     [
       _vm._l(_vm.role, function(content) {
-        return _c("td", [_c("p", [_vm._v(_vm._s(content))])])
+        return _c("td", [
+          typeof content !== "object"
+            ? _c("p", [_vm._v(_vm._s(content))])
+            : _c(
+                "ul",
+                _vm._l(content, function(items) {
+                  return _c("li", [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(items.slug) +
+                        "\n            "
+                    )
+                  ])
+                }),
+                0
+              )
+        ])
       }),
       _vm._v(" "),
       _c(
@@ -48048,7 +48322,7 @@ var render = function() {
     _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "top-bar-right" }, [
-      !this.user
+      this.clean_user.length < 0
         ? _c(
             "ul",
             {
@@ -48183,7 +48457,17 @@ var render = function() {
     "tr",
     [
       _vm._l(_vm.user, function(content) {
-        return _c("td", [_c("p", [_vm._v(_vm._s(content))])])
+        return _c("td", [
+          content === _vm.user.roles || content === _vm.user.permissions
+            ? _c(
+                "ul",
+                _vm._l(content, function(otheritem) {
+                  return _c("li", [_vm._v(_vm._s(otheritem.name))])
+                }),
+                0
+              )
+            : _c("p", [_vm._v(_vm._s(content))])
+        ])
       }),
       _vm._v(" "),
       _c(
@@ -60524,6 +60808,7 @@ module.exports = function(module) {
 
 var map = {
 	"./components/AdminList.vue": "./resources/js/components/AdminList.vue",
+	"./components/AdminMenu.vue": "./resources/js/components/AdminMenu.vue",
 	"./components/AskDelete.vue": "./resources/js/components/AskDelete.vue",
 	"./components/CommentList.vue": "./resources/js/components/CommentList.vue",
 	"./components/FormComment.vue": "./resources/js/components/FormComment.vue",
@@ -60685,6 +60970,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminList_vue_vue_type_template_id_2fbb8432_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminList_vue_vue_type_template_id_2fbb8432_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/AdminMenu.vue":
+/*!***********************************************!*\
+  !*** ./resources/js/components/AdminMenu.vue ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AdminMenu_vue_vue_type_template_id_88ecbf1a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AdminMenu.vue?vue&type=template&id=88ecbf1a&scoped=true& */ "./resources/js/components/AdminMenu.vue?vue&type=template&id=88ecbf1a&scoped=true&");
+/* harmony import */ var _AdminMenu_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AdminMenu.vue?vue&type=script&lang=js& */ "./resources/js/components/AdminMenu.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AdminMenu_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AdminMenu_vue_vue_type_template_id_88ecbf1a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AdminMenu_vue_vue_type_template_id_88ecbf1a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "88ecbf1a",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AdminMenu.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AdminMenu.vue?vue&type=script&lang=js&":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/AdminMenu.vue?vue&type=script&lang=js& ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminMenu_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./AdminMenu.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AdminMenu.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminMenu_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AdminMenu.vue?vue&type=template&id=88ecbf1a&scoped=true&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/AdminMenu.vue?vue&type=template&id=88ecbf1a&scoped=true& ***!
+  \******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminMenu_vue_vue_type_template_id_88ecbf1a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./AdminMenu.vue?vue&type=template&id=88ecbf1a&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AdminMenu.vue?vue&type=template&id=88ecbf1a&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminMenu_vue_vue_type_template_id_88ecbf1a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AdminMenu_vue_vue_type_template_id_88ecbf1a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

@@ -33,9 +33,9 @@ class PostController extends Controller
         $post = $request->all();
         $post["post_date"] = now();
         $post['post_status'] = 'publish';
-
         $post = Post::create($post);
-        if($request->has('photos')) {
+
+        if($request->has('photos') && !is_null($request->photos)) {
             $photoIds = json_decode($request->photos);
             foreach ($photoIds as $photo) {
                 $image = Post::find($photo);
@@ -87,7 +87,7 @@ class PostController extends Controller
         $post->post_category = $request->post_category;
         $post->save();
         $post->files()->detach();
-        if($request->has('photos')) {
+        if($request->has('photos') && !is_null($request->photos)) {
             $photoIds = json_decode($request->photos);
             foreach ($photoIds as $photo) {
                 $image = Post::find($photo);

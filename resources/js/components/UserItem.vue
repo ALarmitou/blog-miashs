@@ -1,7 +1,10 @@
 <template>
     <tr>
         <td v-for="content in user">
-            <p>{{content}}</p>
+            <ul v-if="content ===user.roles || content===user.permissions">
+                <li v-for="otheritem in content">{{otheritem.name}}</li>
+            </ul>
+            <p v-else>{{content}}</p>
         </td>
         <td align="center">
             <form-user v-bind:user="this.user"></form-user>

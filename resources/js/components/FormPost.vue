@@ -2,7 +2,7 @@
     <div>
         <div v-if="alertUser.message!==''" :class="'callout '+this.state ">
             <h5>{{alertUser.title}}</h5>
-            <p><pre>{{alertUser.message}}</pre></p>
+            <pre>{{alertUser.message}}</pre>
             <a :href="'/articles/'+this.updatedData.post_name">{{updatedData.post_title}}</a>
             <button class="button alert" @click="alertUser.message=''">Fermer</button>
         </div>
@@ -11,18 +11,18 @@
                 <fieldset class="fieldset">
                 <legend>{{this.type}}</legend>
                     <label for="post_title">Title</label>
-                    <input type="text" name="post_title" v-model="postToAdd.post_title">
+                    <input type="text" name="post_title" v-model="post.post_title">
                     <label for="post_name">Name</label>
-                    <input type="text" name="post_name" v-model="postToAdd.post_name">
+                    <input type="text" name="post_name" v-model="post.post_name">
                     <label for="post_content">Content</label>
-                    <input type="text" name="post_content" v-model="postToAdd.post_content">
+                    <input type="text" name="post_content" v-model="post.post_content">
                     <label for="post_category">Category</label>
-                    <input type="text" name="post_category" v-model="postToAdd.post_category">
+                    <input type="text" name="post_category" v-model="post.post_category">
                     <label for="files">Selectionner fichiers</label>
-                    <multiselect name="files" v-model="databasePhotos" :options="photosToChoose" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="name" ></multiselect>
+                    <multiselect name="files" v-model="post.photos" :options="photosToChoose" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="post_title" track-by="post_title" ></multiselect>
                     <label for="new_photos">Ajouter de nouveau fichiers</label>
-                    <input type="file" multiple="multiple" name="new_photos" :id="'new_photos['+this.postToAdd.id+']'" @change="filesToUpload">
-                    <a v-if="!this.post" v-on:click="addPost()" v-bind:class="'button '+this.button_type" data-close>
+                    <input type="file" multiple="multiple" name="new_photos" :id="'new_photos['+this.post_id+']'" @change="filesToUpload">
+                    <a v-if="!this.post_id" v-on:click="addPost()" v-bind:class="'button '+this.button_type" data-close>
                         Ajouter
                     </a>
                     <a v-else v-on:click="updatePost()" v-bind:class="'button '+this.button_type" data-close>
@@ -39,13 +39,14 @@
 
 <script>
     export default {
-        props:["post","photos"],
+        //props:["post","photos"],
+        props:["post_id"],
         data:function() {
             return {
                 type:"Ajouter",
                 button_type:'primary',
                 photosToChoose:[],
-                postToAdd:{
+                post:{
                     "post_title":"",
                     "post_content":"",
                     "post_name":"",
@@ -69,8 +70,8 @@
             });
         },
         watch:{
-          post:function(o, n){
-              if(o.id !== n.id) {
+          post_id:function(o, n){
+              if(o !== n) {
                   this.initContent();
               }
           }
@@ -78,23 +79,10 @@
         methods: {
             initContent(){
                 this.getPhotos();
-                if(this.post){
+                if(this.post_id){
                     this.type = "Editer";
                     this.button_type = "warning";
-                    if(typeof this.post === "string")
-                        this.postToAdd = JSON.parse(this.post);
-                    else
-                        this.postToAdd = this.post;
-                    if(typeof this.photos === "string") {
-                        let cleanPhotos = JSON.parse(this.photos);
-                        for(let index in cleanPhotos){
-                            this.databasePhotos.push(
-                                {
-                                    id: cleanPhotos[index].id,
-                                    name: cleanPhotos[index].post_title
-                                });
-                        }
-                    }
+                    this.getPost();
                 }
             },
             openModal() {
@@ -114,7 +102,7 @@
                         this.state = "alert";
                         this.alertUser.title = "Echec !";
                         if(error.response.status === 401){
-                            this.alertUser.message = "Vous n'êtes pas authentifé !";
+                            this.alertUser.message = "Vous n'êtes pas authentifié !";
                         }
                         if(error.response.status === 422){
                             for(let index in error.response.data.errors)
@@ -126,7 +114,7 @@
             updatePost(){
                 this.prepareData();
                 this.postToSend.append("_method","PUT");
-                axios.post('/api/posts/'+this.postToAdd.id, this.postToSend,
+                axios.post('/api/posts/'+this.post.id, this.postToSend,
                     {
                         headers: {
                         "Authorization": this.$session.get('token')
@@ -137,11 +125,12 @@
                     this.alertUser.message = "Le post a été modifié avec succès !";
                     this.state = "success";
                     }).catch(error=>{
+                        console.log(error.response.data);
                         if(error.response.status !==500){
                             this.state = "alert";
                             this.alertUser.title = "Echec !";
                             if(error.response.status === 401){
-                                this.alertUser.message = "Vous n'êtes pas authentifé !";
+                                this.alertUser.message = "Vous n'êtes pas authentifié !";
                             }
                             if(error.response.status === 422){
                                 for(let index in error.response.data.errors)
@@ -150,14 +139,20 @@
                         }
                 });
             },
+            getPost(){
+                axios.get("/api/posts/"+this.post_id,{headers: {
+                        "Authorization": this.$session.get('token')
+                    }}).then(data=>{
+                        this.post = data.data;
+                }).catch(error=>{
+                    console.log(error.response.data);
+                })
+            },
             getPhotos(){
               axios.get('/api/files',{headers: {
                       "Authorization": this.$session.get('token')
                   }}).then(data=>{
-                      let files = data.data.data;
-                      for(let index in files){
-                          this.photosToChoose.push({id:files[index].id,name:files[index].post_title});
-                      }
+                      this.photosToChoose = data.data.data;
                 });
             },
             filesToUpload:function(event){
@@ -167,17 +162,22 @@
                 for (let index = files.length - 1; index >= 0; index--) {
                     this.postToSend.append("new_photos[]",files[index]);
                 }
-                document.getElementById("new_photos["+this.postToAdd.id+"]").value = [];
+                document.getElementById("new_photos["+this.post.id+"]").value = [];
             },
             prepareData:function(){
-                for(let index in this.postToAdd){
-                    this.postToSend.append(index,this.postToAdd[index]);
-                }
-                if(this.databasePhotos.length>0){
-                    let chosenPhotos = [];
-                    for(let index in this.databasePhotos){
-                        chosenPhotos.push(this.databasePhotos[index].id);
+                for(let index in this.post){
+                    if(index ==="author"){
+                        this.postToSend.append("user_id",this.post[index].id);
+                    }else{
+                        this.postToSend.append(index,this.post[index]);
                     }
+                }
+                if(this.post.photos.length>0){
+                    let chosenPhotos = [];
+                    for(let index in this.post.photos){
+                        chosenPhotos.push(this.post.photos[index].id);
+                    }
+                    console.log(chosenPhotos);
                     this.postToSend.append("photos",JSON.stringify(chosenPhotos));
                 }
             }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\PostResource;
 use App\Http\Resources\UserResource;
+use App\Post;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use Illuminate\Http\Request;
@@ -86,5 +88,17 @@ class UserController extends Controller
         $user->save();
         return response()->json([],204);
     }
+
+    /**
+     * Get all posts from a specified user
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function getPosts($id){
+        return response()->json(PostResource::collection(Post::where("user_id",$id)->get()));
+    }
+
 
 }

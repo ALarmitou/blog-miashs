@@ -10,11 +10,7 @@
 </head>
 <body>
 <div id="app">
-    @guest
-        <top-bar></top-bar>
-    @else
-        <top-bar user="{{Auth::user()}}"></top-bar>
-    @endguest
+    <top-bar></top-bar>
     <div class="callout large alert">
         <div class="row column text-center">
             <h1>Admin page</h1>
@@ -22,6 +18,7 @@
         </div>
     </div>
 
+        <admin-menu></admin-menu>
 <div class="row medium-8 large-7 columns">
    @yield("content")
 </div>

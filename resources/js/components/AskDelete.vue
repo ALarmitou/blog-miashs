@@ -32,7 +32,9 @@
                 this.modal.open();
             },
             deleteItem(){
-                axios.delete('/api/'+this.type+'s/'+this.item_id).then(data=>{
+                axios.delete('/api/'+this.type+'s/'+this.item_id,{headers: {
+                        "Authorization": this.$session.get('token')
+                    }}).then(data=>{
                     window.session.$emit(this.tellAdmin,"do-it");
                 });
             }

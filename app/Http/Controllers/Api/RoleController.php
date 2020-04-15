@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RoleRequest;
 use App\Http\Resources\RoleResource;
+use App\Permission;
 use App\Role;
 use Illuminate\Http\Request;
 
@@ -28,9 +30,17 @@ class RoleController extends Controller
     public function store(RoleRequest $request)
     {
         $request->validated();
-        $role = $request->all();
-        Role::create($role);
-        return response()->json([],204);
+        $role = new Role();
+        $role->name = $request->name;
+        $role->slug = $request->slug;
+        $role->save();
+        if($request->has('permissions')) {
+            $permissions = json_decode($request->permissions);
+            foreach ($permissions as $permission) {
+                $role->permissions()->attach(Permission::find($permission->id));
+            }
+        }
+        return response()->json($role,201);
     }
 
     /**
@@ -55,8 +65,17 @@ class RoleController extends Controller
     {
         $request->validated();
         $role = Role::find($id);
+        $role->name = $request->name;
+        $role->slug = $request->slug;
         $role->save();
-        return response()->json([],204);
+        $role->permissions()->detach();
+        if($request->has('permissions')) {
+            $permissions = json_decode($request->permissions);
+            foreach ($permissions as $permission) {
+                $role->permissions()->attach(Permission::find($permission->id));
+            }
+        }
+        return response()->json($role,201);
 
     }
 

@@ -5,7 +5,7 @@
         <h3>{{$post->post_title}} <small>{{$post->post_date}}</small></h3>
         @auth()
         @if($post->author->id === auth()->user()->id)
-            <form-post post="{{json_encode($post)}}" photos="{{json_encode($post->files)}}"></form-post>
+            <form-post post_id="{{$post->id}}"></form-post>
         @endif
         @endauth
         <carousel :autoplay="true" :navigation-enabled="true">

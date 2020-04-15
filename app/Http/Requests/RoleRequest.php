@@ -19,7 +19,9 @@ class RoleRequest extends FormRequest
     public function rules()
     {
         return [
-            "libelle"=>"required"
+            "name"=>"required",
+            "slug"=>"required",
+            "permissions"=>"required",
         ];
     }
 }

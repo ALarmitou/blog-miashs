@@ -10,11 +10,7 @@
 </head>
 <body>
 <div id="app">
-    @guest
     <top-bar></top-bar>
-    @else
-    <top-bar user="{{Auth::user()}}"></top-bar>
-    @endguest
 
     <div class="callout large primary">
         <div class="row column text-center">

@@ -23,7 +23,7 @@ Route::get("/posts/{id}",['as'=>'posts.show','uses'=>'Api\PostController@show'])
 Route::put("/posts/{id}",['as'=>'posts.update','uses'=>'Api\PostController@update'])
     ->middleware(['auth:api']);
 
-Route::delete("/posts/{id}",['as'=>'posts.delete','uses'=>'Api\PostController@delete'])
+Route::delete("/posts/{id}",['as'=>'posts.delete','uses'=>'Api\PostController@destroy'])
     ->middleware(['auth:api', 'scopes:manage-posts']);
 
 Route::get("/posts/{id}/comments",['as'=>'posts.comments.show','uses'=>'Api\PostController@showComments']);
@@ -48,7 +48,11 @@ Route::get("/roles/{id}",['as'=>'roles.show','uses'=>'Api\RoleController@show'])
 Route::put("/roles/{id}",['as'=>'roles.update','uses'=>'Api\RoleController@update'])
     ->middleware(['auth:api', 'scopes:manage-roles']);
 
-Route::delete("/roles/{id}",['as'=>'roles.delete','uses'=>'Api\RoleController@delete'])
+Route::delete("/roles/{id}",['as'=>'roles.delete','uses'=>'Api\RoleController@destroy'])
+    ->middleware(['auth:api', 'scopes:manage-roles']);
+
+
+Route::get("/permissions",['as'=>'permissions.index','uses'=>'Api\PermissionController@index'])
     ->middleware(['auth:api', 'scopes:manage-roles']);
 
 
@@ -64,12 +68,18 @@ Route::get("/users/{id}",['as'=>'users.show','uses'=>'Api\UserController@show'])
 Route::put("/users/{id}",['as'=>'users.update','uses'=>'Api\UserController@update'])
     ->middleware(['auth:api']);
 
-Route::delete("/users/{id}",['as'=>'roles.delete','uses'=>'Api\UserController@delete'])
+Route::delete("/users/{id}",['as'=>'roles.delete','uses'=>'Api\UserController@destroy'])
     ->middleware(['auth:api', 'scopes:manage-users']);
 
 Route::put("/users/{id}/password",['as'=>'users.change.password','uses'=>'Api\UserController@changePassword'])
     ->middleware(['auth:api']);
 
+Route::get("/users/{id}/posts",['as'=>'user.posts.show','uses'=>'Api\UserController@getPosts']);
+
+
+
+Route::get("/admin-menu",['as'=>'admin.menu','uses'=>'Api\AdminController@index'])
+    ->middleware(['auth:api', 'scopes:manage-users,manage-posts,manage-roles']);
 
 
 Route::resource('comments', 'Api\CommentController')->names([

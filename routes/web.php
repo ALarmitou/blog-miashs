@@ -27,9 +27,9 @@ Route::post("/contact",['as'=>'contact.store','uses'=>'ContactController@store']
 
 Auth::routes();
 Route::get("/my-profile","UserController@profile");
-Route::group(['middleware' => 'role:admin'], function() {
-    Route::get('/admin', 'Admin\AdminController@index');
-    Route::get('/admin/posts', 'Admin\PostController@index');
-    Route::get('/admin/roles', 'Admin\RoleController@index');
-    Route::get('/admin/users', 'Admin\UserController@index');
+Route::middleware(['auth','role:admin'])->group(function() {
+    Route::get('/admin', ['as'=>'admin.index','uses'=>'Admin\AdminController@index']);
+    Route::get('/admin/posts', ['as'=>'admin.posts.index','uses'=>'Admin\PostController@index']);
+    Route::get('/admin/roles', ['as'=>'admin.roles.index','uses'=>'Admin\RoleController@index']);
+    Route::get('/admin/users', ['as'=>'admin.users.index','uses'=>'Admin\UserController@index']);
 });

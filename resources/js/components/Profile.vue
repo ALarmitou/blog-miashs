@@ -70,7 +70,6 @@
 
 <script>
     export default {
-        props:['user','roles','posts'],
         data:function(){
             return {
                 profile:{
@@ -89,6 +88,7 @@
               axios.put("/api/users/"+this.profile.id,this.profile,{headers: {
                       "Authorization": this.$session.get('token')
                   }}).then(data=>{
+                  this.$session.set('user',data.data);
               }).catch(error=>{
                   console.log(error.response.data);
               })
@@ -101,13 +101,20 @@
                 }).catch(error=>{
                     console.log(error.response.data);
                 })
+            },
+            getOwnPosts:function(){
+              axios.get("/api/users/"+this.profile.id+"/posts",{headers: {
+                      "Authorization": this.$session.get('token')
+                  }}).then(data=>{
+                  this.own_posts=data.data;
+              });
             }
         },
         mounted(){
             $(this.$el).foundation();
-            this.profile = JSON.parse(this.user);
-            this.clean_roles = JSON.parse(this.roles);
-            this.own_posts = JSON.parse(this.posts);
+            this.profile = this.$session.get("user");
+            this.clean_roles = this.profile.roles;
+            this.getOwnPosts();
         }
     }
 </script>

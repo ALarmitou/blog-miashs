@@ -9,7 +9,7 @@
             </ul>
         </div>
         <div class="top-bar-right">
-            <ul v-if="!this.user" class="menu dropdown" data-dropdown-menu>
+            <ul v-if="this.clean_user.length<0" class="menu dropdown" data-dropdown-menu>
 
                 <li>
                     <a class="nav-link" href="/login">Se connecter</a>
@@ -46,8 +46,7 @@
 
 <script>
     export default {
-        props:["user"],
-        data:function() {
+        data:function(){
             return {
                 clean_user:{}
             }
@@ -71,8 +70,8 @@
         },
         mounted(){
             $(this.$el).foundation();
-            if(this.user)
-                this.clean_user = JSON.parse(this.user);
+            if(this.$session.exists() && this.$session.get("user"))
+                this.clean_user = this.$session.get("user");
         }
     }
 </script>

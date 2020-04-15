@@ -11,12 +11,15 @@
 <li>vue-multiselect</li>
 </ul>
 <h2>Installation du projet</h2>
-
-<p>Pour installer le projet, utilisez les commandes suivantes :</p>
+<p>Ouvrez un terminal de commande et déplacez-vous à la racine du projet.</p>
+<p>Utilisez les commandes suivantes :</p>
 <ul>
+    <li>touch database/database.sqlite</li>
+    <li>composer install</li>
     <li>npm install</li>
     <li>php artisan migrate:fresh --seed</li>
     <li>php artisan passport:install</li>
+    <li>npm run prod</li>
     <li>php artisan serve</li>
 </ul>
 

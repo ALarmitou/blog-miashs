@@ -80,11 +80,11 @@ par l'application et choisir les permissions liées à ce rôle. On peut aussi d
 <p>En suivant le schéma de base de données du TP2, les medias sont stockés dans la table Post
 et reliés avec une table de liaison posts_posts.</p>
 
-<h4>Utilisation de la version Sass de Foundation</h4>
+<h4>Utilisation de la version Sass de Foundation, application Responsive et Laravel Mix</h4>
 <p>Seulement un seul fichier CSS est utilisé dans l'application, et c'est celui généré par la compilation de Sass</p>
 
 <h4>Utilisation du Framework VueJs</h4>
-<p>Plusieurs composants Vue ont été crée et utilisé dans toute l'application :</p>
+<p>Plusieurs composants Vue ont été crées et utilisés dans toute l'application :</p>
 <ul>
     <li>Les formulaires d'ajout/édition</li>
     <li>Les listes des tables du back-end</li>
@@ -95,7 +95,7 @@ et reliés avec une table de liaison posts_posts.</p>
     <li>Le multiselect (libraire vue-multiselect)</li>
 </ul>
 
-<h4>Développement penché côté API</h4>
+<h4>Développement penché API</h4>
 <p>La majeure partie d'ajout, edition, suppression et selection en base est effectuée en Ajax</p>
 <p>Pour faciliter l'interaction, le développement d'une API s'est imposé.</p>
 
@@ -104,9 +104,10 @@ et reliés avec une table de liaison posts_posts.</p>
 générer des Tokens d'authentification, avec des scopes propres aux permissions des utilisateur</p>
 <p>Se connecter à l'exterieur de l'application (avec Postman, par exemple), n'est pas possible.</p>
 
-
+<h2>Notes</h2>
+<p>J'ai utilisé le modèle de base de données du TP2.</p>
 <h2>Remarques</h2>
-<p>Pour développer les rôles et permissions, j'ai préféré ne pas utiliser Policies de Laravel mais une gestion personnalisée
+<p>Pour développer les rôles et permissions, j'ai préféré ne pas utiliser les Policies de Laravel mais une gestion personnalisée
 en suivant un tutoriel se rapprochant plus de ce que je voulais faire, mais aussi que la sécurité
 soit uniforme à la fois pour l'API et pour le site.</p>
 <p>Pour ma part, j'aurais préféré plus me concentrer sur ce projet que sur d'autres.</p>

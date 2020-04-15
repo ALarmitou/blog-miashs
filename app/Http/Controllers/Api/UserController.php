@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\UserResource;
+use App\Permission;
 use App\Post;
+use App\Role;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use Illuminate\Http\Request;
@@ -23,19 +25,6 @@ class UserController extends Controller
         return UserResource::collection(User::paginate(5));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(UserRequest $request)
-    {
-        $request->validated();
-        $user = $request->all();
-        User::create($user);
-        return response()->json(new UserResource($user),201);
-    }
 
     /**
      * Display the specified resource.
@@ -61,6 +50,18 @@ class UserController extends Controller
         $user = User::find($id);
         $user->name = $request->get("name");
         $user->email = $request->get("email");
+        $user->roles()->detach();
+        $user->permissions()->detach();
+        $roles = json_decode($request->roles);
+        foreach ($roles as $role){
+            $user->roles()->attach(Role::find($role->id));
+        }
+        if($request->has("permissions")){
+            $permissions = json_decode($request->permissions);
+            foreach ($permissions as $permission){
+                $user->permissions()->attach(Permission::find($permission->id));
+            }
+        }
         $user->save();
         return response()->json(new UserResource($user),201);
 

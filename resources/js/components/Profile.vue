@@ -111,7 +111,6 @@
             }
         },
         mounted(){
-            $(this.$el).foundation();
             this.profile = this.$session.get("user");
             this.clean_roles = this.profile.roles;
             this.getOwnPosts();

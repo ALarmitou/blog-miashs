@@ -13,7 +13,7 @@
                     <input type="text" name="name" v-model="roleToAdd.name">
                     <label for="slug">Slug</label>
                     <input type="text" name="slug" v-model="roleToAdd.slug">
-                    <label for="permissions">Selectionner fichiers</label>
+                    <label for="permissions">Selectionner permissions</label>
                     <multiselect name="permissions" v-model="chosenPerms" :options="perms" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="name" ></multiselect>
 
                     <a v-if="!this.role" v-on:click="addRole()" v-bind:class="'button '+this.button_type" data-close>
@@ -41,7 +41,7 @@
            this.initContent();
         },
         watch:{
-          post:function(o, n){
+          user:function(o, n){
               if(o.id !== n.id) {
                   this.initContent();
               }

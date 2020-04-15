@@ -13,8 +13,7 @@
     <top-bar></top-bar>
     <div class="callout large alert">
         <div class="row column text-center">
-            <h1>Admin page</h1>
-            <h2 class="subheader">something something</h2>
+            <h1>Tableau de bord administateur</h1>
         </div>
     </div>
 
@@ -23,10 +22,5 @@
    @yield("content")
 </div>
 </div>
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.js"></script>
-<script>
-    $(document).foundation();
-</script>
 </body>
 </html>

@@ -91,4 +91,8 @@ class RoleController extends Controller
         $role->delete();
         return response()->json([],204);
     }
+
+    public function all(){
+        return RoleResource::collection(Role::all());
+    }
 }

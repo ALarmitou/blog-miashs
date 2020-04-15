@@ -1,6 +1,6 @@
 <template>
     <div>
-        <table>
+        <table class="scroll">
             <thead>
             <tr>
                 <th v-for="header in this.headers">{{header}}</th>
@@ -16,9 +16,9 @@
             </tbody>
         </table>
         <div v-if="this.links !=={}" class="row">
-            <button :disabled="links.prev===null" type="button" class="columns small-4 button" v-on:click="getData(links.prev)">Prev</button>
+            <button :disabled="links.prev===null" type="button" class="columns small-4 button" v-on:click="getData(links.prev)">Précedent</button>
             <div class="columns small-4"></div>
-            <button :disabled="links.next===null" type="button" class="columns small-4 button" v-on:click="getData(links.next)">Next</button>
+            <button :disabled="links.next===null" type="button" class="columns small-4 button" v-on:click="getData(links.next)">Suivant</button>
         </div>
     </div>
 </template>

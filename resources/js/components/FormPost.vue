@@ -39,7 +39,6 @@
 
 <script>
     export default {
-        //props:["post","photos"],
         props:["post_id"],
         data:function() {
             return {
@@ -65,6 +64,7 @@
         },
         mounted() {
             this.initContent();
+            this.getPhotos();
             this.form = new Foundation.Reveal($('#reveal-dialog'), {
                 animationIn: 'scale-in-up',
             });
@@ -78,7 +78,6 @@
         },
         methods: {
             initContent(){
-                this.getPhotos();
                 if(this.post_id){
                     this.type = "Editer";
                     this.button_type = "warning";
@@ -177,7 +176,6 @@
                     for(let index in this.post.photos){
                         chosenPhotos.push(this.post.photos[index].id);
                     }
-                    console.log(chosenPhotos);
                     this.postToSend.append("photos",JSON.stringify(chosenPhotos));
                 }
             }

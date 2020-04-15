@@ -149,5 +149,43 @@ class PostController extends Controller
         return PostResource::collection(Post::where('post_type','file')->get());
     }
 
+    /**
+     * Get 5 posts
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+
+    public function indexFront(){
+
+        return PostResource::collection(Post::where("post_type","article")
+            ->orderBy('id', 'desc')
+            ->paginate(5));
+
+    }
+
+    /**
+     * Get 5 posts by category
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+
+    public function getByCategory($category){
+        return PostResource::collection(Post::where("post_type","article")
+            ->where("post_category",$category)
+            ->orderBy('id', 'desc')->paginate(5));
+
+    }
+    /**
+     * Get all categories
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+
+    public function allCategories(){
+        return response()->json(Post::select('post_category')->where("post_type","article")->get(),200);
+    }
 
 }

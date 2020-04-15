@@ -2,11 +2,6 @@
 
 @section("content")
     <h1>Home</h1>
-    @auth()
-    @if(auth()->user()->can("create-posts"))
-    <form-post></form-post>
-    @endif
-    @endauth
     <ul>
         @foreach ( $posts as $post )
 

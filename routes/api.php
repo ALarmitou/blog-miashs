@@ -28,6 +28,12 @@ Route::delete("/posts/{id}",['as'=>'posts.delete','uses'=>'Api\PostController@de
 
 Route::get("/posts/{id}/comments",['as'=>'posts.comments.show','uses'=>'Api\PostController@showComments']);
 
+Route::get("/front/posts",['as'=>'posts.front.index','uses'=>'Api\PostController@indexFront']);
+
+Route::get("/posts/category/{category}",['as'=>'posts.categories.index','uses'=>'Api\PostController@getByCategory']);
+
+Route::get("/posts/all/categories",['as'=>'posts.categories.all','uses'=>'Api\PostController@allCategories']);
+
 Route::get("/files",['as'=>'posts.files.index','uses'=>'Api\PostController@indexFiles']);
 
 
@@ -35,6 +41,9 @@ Route::apiResources([
     'comments'=>'Api\CommentController'
 ]);
 
+
+Route::get("/roles/all",['as'=>'roles.all','uses'=>'Api\RoleController@all'])
+    ->middleware(['auth:api', 'scopes:manage-roles']);
 
 Route::get("/roles",['as'=>'roles.index','uses'=>'Api\RoleController@index'])
     ->middleware(['auth:api', 'scopes:manage-roles']);
@@ -51,15 +60,10 @@ Route::put("/roles/{id}",['as'=>'roles.update','uses'=>'Api\RoleController@updat
 Route::delete("/roles/{id}",['as'=>'roles.delete','uses'=>'Api\RoleController@destroy'])
     ->middleware(['auth:api', 'scopes:manage-roles']);
 
-
 Route::get("/permissions",['as'=>'permissions.index','uses'=>'Api\PermissionController@index'])
     ->middleware(['auth:api', 'scopes:manage-roles']);
 
-
 Route::get("/users",['as'=>'users.index','uses'=>'Api\UserController@index'])
-    ->middleware(['auth:api', 'scopes:manage-users']);
-
-Route::post("/users",['as'=>'users.store','uses'=>'Api\UserController@store'])
     ->middleware(['auth:api', 'scopes:manage-users']);
 
 Route::get("/users/{id}",['as'=>'users.show','uses'=>'Api\UserController@show'])
@@ -85,5 +89,3 @@ Route::get("/admin-menu",['as'=>'admin.menu','uses'=>'Api\AdminController@index'
 Route::resource('comments', 'Api\CommentController')->names([
     'index' => 'api.comments.index'
 ]);
-
-

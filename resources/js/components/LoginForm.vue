@@ -60,6 +60,7 @@
         },
         methods:{
           login:function(){
+              this.error={email:"",password:""}
             axios.post(this.login_route, this.user).then(data=>{
                 this.$session.start();
                 this.$session.set('token',"Bearer "+data.data.token);
@@ -72,9 +73,10 @@
             });
           },
           assignErrors:function(errors){
-              this.error.email = errors.email[0];
-              this.error.password = errors.password[0];
-              console.log(this.error)
+              if(errors.email)
+                this.error.email = errors.email[0];
+              if(errors.password)
+                this.error.password = errors.password[0];
           }
         }
     }

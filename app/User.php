@@ -10,6 +10,10 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
+    /**
+     * Auth possible avec token APIs (Passport)
+     * L'utlisateur a des rôles et des permissions
+     */
     use HasApiTokens, Notifiable, HasRolesAndPermissions;
 
     /**

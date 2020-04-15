@@ -19,11 +19,13 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'author' => $this->author,
             'post_name' => $this->post_name,
+            'post_date' => $this->post_date,
             'post_title' => $this->post_title,
             'post_content' => $this->post_content,
             'post_category'=> $this->post_category,
             'post_type'=>$this->post_type,
-            "photos"=>$this->files
+            "photos"=>$this->files,
+            "comments"=>$this->comments
         ];
     }
 }

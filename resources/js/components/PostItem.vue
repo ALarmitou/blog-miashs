@@ -5,7 +5,7 @@
                 {{content.substring(0,50)+"..."}}
             </p>
             <p v-else-if="content ===post.author">{{content.name}}</p>
-            <p v-else-if="content ===post.photos">{{content.length}}</p>
+            <p v-else-if="content ===post.photos || content ===post.comments">{{content.length}}</p>
             <img v-else-if="post.post_type==='file' && content ===post.post_name" :src="imgPath+'/'+content" alt="">
             <p v-else>{{content}}</p>
         </td>

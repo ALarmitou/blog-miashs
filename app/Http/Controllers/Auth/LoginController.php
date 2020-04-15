@@ -64,7 +64,7 @@ class LoginController extends Controller
 
     public function loggedOut(Request $request)
     {
-        return response()->json("ok");
+        return response()->json([],204);
     }
 
 }

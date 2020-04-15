@@ -28,7 +28,9 @@ class UserRequest extends FormRequest
     {
         return [
             "name"=>"required",
-            "email"=>"required"
+            "email"=>"required",
+            "roles"=>"required|string",
+            "permissions"=>"nullable|string",
         ];
     }
 }

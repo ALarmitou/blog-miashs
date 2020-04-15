@@ -29,7 +29,7 @@ class UserRequest extends FormRequest
         return [
             "name"=>"required",
             "email"=>"required",
-            "roles"=>"required|string",
+            "roles"=>"nullable|string",
             "permissions"=>"nullable|string",
         ];
     }

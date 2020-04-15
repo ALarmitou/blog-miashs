@@ -52,9 +52,11 @@ class UserController extends Controller
         $user->email = $request->get("email");
         $user->roles()->detach();
         $user->permissions()->detach();
-        $roles = json_decode($request->roles);
-        foreach ($roles as $role){
-            $user->roles()->attach(Role::find($role->id));
+        if($request->has("roles")) {
+            $roles = json_decode($request->roles);
+            foreach ($roles as $role) {
+                $user->roles()->attach(Role::find($role->id));
+            }
         }
         if($request->has("permissions")){
             $permissions = json_decode($request->permissions);

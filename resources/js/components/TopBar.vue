@@ -56,8 +56,6 @@
                 axios.post("/logout").then(data=>{
                   this.$session.destroy();
                   window.location.href = "/";
-                }).catch(error=>{
-                  console.log("error")
                 });
             },
             isAdmin:function(){

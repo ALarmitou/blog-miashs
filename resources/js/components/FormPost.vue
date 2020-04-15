@@ -124,7 +124,6 @@
                     this.alertUser.message = "Le post a été modifié avec succès !";
                     this.state = "success";
                     }).catch(error=>{
-                        console.log(error.response.data);
                         if(error.response.status !==500){
                             this.state = "alert";
                             this.alertUser.title = "Echec !";
@@ -143,9 +142,7 @@
                         "Authorization": this.$session.get('token')
                     }}).then(data=>{
                         this.post = data.data;
-                }).catch(error=>{
-                    console.log(error.response.data);
-                })
+                });
             },
             getPhotos(){
               axios.get('/api/files',{headers: {

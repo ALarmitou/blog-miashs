@@ -41,7 +41,7 @@
            this.initContent();
         },
         watch:{
-          user:function(o, n){
+          role:function(o, n){
               if(o.id !== n.id) {
                   this.initContent();
               }
@@ -82,7 +82,6 @@
                 axios.post('/api/roles', this.prepareData(),{headers: {
                     "Authorization": this.$session.get('token')
                 }}).then(data=>{
-                    console.log(data);
                     this.alertUser.title = "Succès !";
                     this.alertUser.message = "Le role a été ajouté avec succès !";
                     this.state = "success";
@@ -104,7 +103,6 @@
                 axios.put('/api/roles/'+this.roleToAdd.id,this.prepareData(),{headers: {
                         "Authorization": this.$session.get('token')
                     }}).then(data=>{
-                    console.log(data);
                     this.alertUser.title = "Succès !";
                     this.alertUser.message = "Le role a été modifié avec succès !";
                     this.state = "success";

@@ -35,7 +35,6 @@ Vue.component('multiselect', Multiselect);
 const app = new Vue({
     el: '#app',
     mounted(){
-
         $(this.$el).foundation();
     }
 });

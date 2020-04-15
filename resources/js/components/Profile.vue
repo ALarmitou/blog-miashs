@@ -16,15 +16,20 @@
                             <div class="card-divider">Mon profil</div>
                             <div class="card-section">
                                 <form>
-                                <label for="name">Nom</label>
-                                <input type="text" name="name" v-model="profile.name" :disabled="editing">
-                                <label for="name">Email</label>
-                                <input type="text" name="name" v-model="profile.email" :disabled="editing">
-                                <div id="row">
-                                <button @click="editing=!editing" type="button" class="button warning">Editer</button>
-                                <button @click="editProfile()" type="button" class="button primary">Mettre à jour</button>
-                                </div>
+                                    <label for="name">Nom</label>
+                                    <input type="text" name="name" v-model="profile.name" :disabled="editing">
+                                    <label for="name">Email</label>
+                                    <input type="text" name="name" v-model="profile.email" :disabled="editing">
+                                    <div id="row">
+                                        <button @click="editing=!editing" type="button" class="button warning">Editer</button>
+                                        <button @click="editProfile()" type="button" class="button primary">Mettre à jour</button>
+                                    </div>
                                 </form>
+                                <div v-if="profileEdited.message!==''" :class="'callout '+this.state ">
+                                    <h5>{{profileEdited.title}}</h5>
+                                    <pre>{{profileEdited.message}}</pre>
+                                    <button class="button alert" @click="profileEdited.message=''">Fermer</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -80,26 +85,42 @@
                 },
                 clean_roles:[],
                 own_posts:[],
-                editing:true
+                editing:true,
+                profileEdited:{
+                    title:"",
+                    message:""
+                },
+                passwordChanged:{
+                    title:"",
+                    message:""
+                },
             }
         },
         methods:{
           editProfile:function(){
-              axios.put("/api/users/"+this.profile.id,this.profile,{headers: {
+              axios.put("/api/users/"+this.profile.id,this.profileToUpdate(),{headers: {
                       "Authorization": this.$session.get('token')
                   }}).then(data=>{
                   this.$session.set('user',data.data);
+                  this.profileEdited.title="Réussite!"
+                  this.profileEdited.message="Votre profil a été modifié!"
               }).catch(error=>{
-                  console.log(error.response.data);
+                  this.profileEdited.title="Echec!"
+                  for(let an_error in error.response.data.errors)
+                      this.profileEdited.message+=error.response.data.errors[an_error]
               })
           },
             changePassword:function(){
                 axios.put("/api/users/"+this.profile.id+"/password",this.password_change,{headers: {
                         "Authorization": this.$session.get('token')
                     }}).then(data=>{
-                    console.log(data);
+                    this.passwordChanged.title="Réussite!"
+                    this.passwordChanged.message="Votre mot de passe a été modifié!"
                 }).catch(error=>{
-                    console.log(error.response.data);
+
+                    this.passwordChanged.title="Echec!"
+                    for(let an_error in error.response.data)
+                        this.passwordChanged.message+=error.response.data[an_error].error
                 })
             },
             getOwnPosts:function(){
@@ -108,6 +129,12 @@
                   }}).then(data=>{
                   this.own_posts=data.data;
               });
+            },
+            profileToUpdate:function(){
+              return {
+                  "name":this.profile.name,
+                  "email":this.profile.email
+              }
             }
         },
         mounted(){

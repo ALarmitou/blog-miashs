@@ -70,6 +70,7 @@
                 if (error.response.status === 422){
                     this.assignErrors(error.response.data.errors);
                 }
+                console.log(error.response.data);
             });
           },
           assignErrors:function(errors){

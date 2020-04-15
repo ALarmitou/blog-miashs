@@ -1,5 +1,10 @@
 <template>
     <div>
+        <div v-if="alertUser.message!==''" :class="'callout '+this.state ">
+            <h5>{{alertUser.title}}</h5>
+            <pre>{{alertUser.message}}</pre>
+            <button class="button alert" @click="alertUser.message=''">Fermer</button>
+        </div>
         <div id="reveal-dialog" class="reveal" data-reveal>
             <form>
                 <fieldset class="fieldset">
@@ -12,11 +17,7 @@
                     <multiselect name="roles" v-model="userToAdd.roles" :options="allRoles" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="name" ></multiselect>
                     <label for="permissions">Selectionner permissions</label>
                     <multiselect name="permissions" v-model="userToAdd.permissions" :options="allPerms" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="name" ></multiselect>
-
-                    <a v-if="!this.user" v-on:click="addUser()" v-bind:class="'button '+this.button_type" data-close>
-                        Ajouter
-                    </a>
-                    <a v-else v-on:click="updateUser()" v-bind:class="'button '+this.button_type" data-close>
+                    <a v-on:click="updateUser()" v-bind:class="'button '+this.button_type" data-close>
                         Editer
                     </a>
                 </fieldset>
@@ -57,7 +58,11 @@
                     "permissions":[]
                 },
                 allRoles:[],
-                allPerms:[]
+                allPerms:[],
+                alertUser:{
+                    title:'',
+                    message:''
+                },
             };
         },
         methods: {
@@ -71,23 +76,25 @@
             openModal() {
                 this.form.open();
             },
-            addUser(){
-                axios.post('/api/users', this.prepareData(),{headers: {
-                    "Authorization": this.$session.get('token')
-                }}).then(data=>{
-                    console.log(data);
-                }).catch(error=>{
-                    console.log(error);
-                });
-            },
             updateUser(){
                 axios.put('/api/users/'+this.userToAdd.id, this.prepareData(),{headers: {
                         "Authorization": this.$session.get('token')
                     }}).then(data=>{
-                    console.log(data);
-
+                    this.alertUser.title = "Succès !";
+                    this.alertUser.message = "L'utilisateur a été modifié avec succès !";
+                    this.state = "success";
                 }).catch(error=>{
-                    console.log(error.response.data);
+                    if(error.response.status !==500){
+                        this.state = "alert";
+                        this.alertUser.title = "Echec !";
+                        if(error.response.status === 401){
+                            this.alertUser.message = "Vous n'êtes pas authentifié !";
+                        }
+                        if(error.response.status === 422){
+                            for(let index in error.response.data.errors)
+                                this.alertUser.message += error.response.data.errors[index]+"\n"
+                        }
+                    }
                 });
             },
             getRoles(){
